@@ -1,23 +1,81 @@
-<div class="carrito-container" *ngIf="carrito.length > 0; else vacio">
-  <h2>🛍️ Carrito de Compras</h2>
+<div class="carrito-grid" *ngIf="carrito.length > 0; else vacio">
+  <!-- 🧾 Lista de productos -->
+  <div class="carrito-items">
+    <h2 class="carrito-titulo">🛍️ Mi carrito ({{ carrito.length }})</h2>
 
-  <div class="item-carrito" *ngFor="let item of carrito">
-    <img [src]="item.producto.imagen_url" alt="img" />
-    <div class="info">
-      <h3>{{ item.producto.nombre }}</h3>
-      <p><strong>Talla:</strong> {{ item.talla }}</p>
-      <p><strong>Cantidad:</strong> {{ item.cantidad }}</p>
-      <p><strong>Precio:</strong> {{ item.producto.precio | currency }}</p>
+    <div class="item-carrito" *ngFor="let item of carrito">
+      <!-- 🖼 Imagen del producto -->
+      <div class="item-imagen">
+        <img [src]="item.imagen_url" [alt]="item.nombre" />
+      </div>
+
+      <!-- 📝 Info del producto -->
+      <div class="item-info">
+        <div class="nombre-precio">
+          <h3 class="nombre">{{ item.nombre }}</h3>
+          <p class="precio">{{ item.precio | currency }}</p>
+        </div>
+
+        <div class="variantes">
+          <span class="talla">Talla: {{ item.talla }}</span>
+        </div>
+
+        <!-- 🔢 Control de cantidad -->
+        <div class="cantidad">
+          <label for="cantidad-{{ item.id }}">Cantidad </label>
+          <div class="cantidad-controles" id="cantidad-{{ item.id }}">
+            <button aria-label="Disminuir cantidad" (click)="restarCantidad(item)">−</button>
+            <span class="cantidad-numero">{{ item.cantidad }}</span>
+            <button aria-label="Aumentar cantidad" (click)="sumarCantidad(item)">+</button>
+          </div>
+        </div>
+      </div>
+
+      <!-- ❌ Eliminar producto -->
+      <div class="item-eliminar">
+        <button aria-label="Eliminar producto" (click)="removerItem(item)">×</button>
+      </div>
     </div>
   </div>
 
-  <div class="total">
-    <p><strong>Total:</strong> {{ total | currency }}</p>
-  </div>
+  <!-- 📦 Resumen del pedido -->
+  <div class="resumen-pedido">
+    <h3>Resumen</h3>
 
-  <button class="btn-vaciar" (click)="vaciarCarrito()">Vaciar carrito</button>
+    <div class="linea">
+      <span>Subtotal:</span>
+      <span>{{ total | currency }}</span>
+    </div>
+
+    <div class="linea">
+      <span>Envío:</span>
+      <span>Gratis</span>
+    </div>
+
+    <div class="linea total">
+      <span>Total:</span>
+      <strong>{{ total | currency }}</strong>
+    </div>
+
+    <!-- 🎟 Cupón -->
+    <div class="cupon">
+      <label for="cuponInput">¿Tienes un cupón?</label>
+      <input id="cuponInput" type="text" placeholder="Ingresa tu código" />
+      <button class="btn aplicar">Aplicar</button>
+    </div>
+
+    <!-- ✅ Acciones -->
+    <button class="btn comprar">🛒 Realizar pedido</button>
+    <button class="btn vaciar" (click)="vaciarCarrito()">🗑 Vaciar carrito</button>
+    <button class="btn volver" (click)="volver()">← Volver a productos</button>
+
+  </div>
 </div>
 
+<!-- 🛒 Carrito vacío -->
 <ng-template #vacio>
-  <p class="carrito-vacio">Tu carrito está vacío 🛒</p>
+  <div class="carrito-vacio">
+    <p>🛒 Tu carrito está vacío</p>
+    <button class="btn volver" (click)="volver()">← Volver a productos</button>
+  </div>
 </ng-template>

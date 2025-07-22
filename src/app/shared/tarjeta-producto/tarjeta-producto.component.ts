@@ -20,19 +20,24 @@ export class TarjetaProductoComponent {
 
   constructor(private carritoService: CarritoService) {}
 
-  abrirModal(producto: any) {
+  abrirModal(producto: any): void {
     this.productoSeleccionado = producto;
     this.tallaSeleccionada = '';
     this.cantidadSeleccionada = 1;
     this.mostrarModal = true;
+    console.log('🛍️ Modal abierto para producto:', producto);
   }
 
-  cerrarModal() {
+  cerrarModal(): void {
     this.mostrarModal = false;
+    console.log('❌ Modal cerrado');
   }
 
-  confirmarAgregar() {
-    if (!this.tallaSeleccionada || this.cantidadSeleccionada < 1) return;
+  confirmarAgregar(): void {
+    if (!this.tallaSeleccionada.trim() || this.cantidadSeleccionada < 1) {
+      console.warn('⚠️ Selecciona una talla válida y una cantidad mayor a cero');
+      return;
+    }
 
     const productoFinal = {
       ...this.productoSeleccionado,
@@ -40,7 +45,21 @@ export class TarjetaProductoComponent {
       cantidad: this.cantidadSeleccionada
     };
 
-    this.carritoService.agregarAlCarrito(productoFinal);
+    const carritoActual = this.carritoService.obtenerCarrito();
+
+    const existente = carritoActual.find(item =>
+      item.id === productoFinal.id && item.talla === productoFinal.talla
+    );
+
+    if (existente) {
+      existente.cantidad += productoFinal.cantidad;
+      console.log('➕ Producto ya en carrito, suma cantidad:', existente);
+    } else {
+      carritoActual.push(productoFinal);
+      console.log('🆕 Producto nuevo agregado al carrito:', productoFinal);
+    }
+
+    this.carritoService.actualizarCarrito(carritoActual);
     this.cerrarModal();
   }
 }

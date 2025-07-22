@@ -1,19 +1,34 @@
 import { Injectable } from '@angular/core';
 
-@Injectable({ providedIn: 'root' })
+@Injectable({
+  providedIn: 'root'
+})
 export class CarritoService {
-  private carrito: any[] = [];
+  private readonly STORAGE_KEY = 'carrito_compras';
 
-  agregarAlCarrito(producto: any) {
-    this.carrito.push(producto);
-    console.log('🛒 Producto agregado al carrito:', producto);
-  }
+  constructor() {}
 
+  /**
+   * Obtiene el contenido del carrito desde localStorage
+   */
   obtenerCarrito(): any[] {
-    return this.carrito;
+    const data = localStorage.getItem(this.STORAGE_KEY);
+    return data ? JSON.parse(data) : [];
   }
 
-  limpiarCarrito() {
-    this.carrito = [];
+  /**
+   * Guarda el carrito actualizado en localStorage
+   */
+  actualizarCarrito(carrito: any[]): void {
+    localStorage.setItem(this.STORAGE_KEY, JSON.stringify(carrito));
+    console.log('📝 Carrito actualizado en localStorage:', carrito);
+  }
+
+  /**
+   * Limpia el carrito por completo
+   */
+  limpiarCarrito(): void {
+    localStorage.removeItem(this.STORAGE_KEY);
+    console.log('🗑 Carrito eliminado de localStorage');
   }
 }
