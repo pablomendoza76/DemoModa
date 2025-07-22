@@ -1,0 +1,74 @@
+@use '../../shared/colores.scss' as *;
+@use '../../shared/tipografia.scss' as *;
+
+.carrito-container {
+  padding: 2rem;
+  font-family: $fuente-principal;
+  max-width: 800px;
+  margin: auto;
+
+  h2 {
+    font-size: 2rem;
+    margin-bottom: 1.5rem;
+    color: $color-primario;
+  }
+
+  .item-carrito {
+    display: flex;
+    align-items: flex-start;
+    gap: 1rem;
+    margin-bottom: 1.5rem;
+    border-bottom: 1px solid #e0e0e0;
+    padding-bottom: 1rem;
+
+    img {
+      width: 100px;
+      height: 100px;
+      object-fit: cover;
+      border-radius: 0.5rem;
+    }
+
+    .info {
+      flex: 1;
+
+      h3 {
+        margin: 0;
+        font-size: 1.2rem;
+        color: $color-texto;
+      }
+
+      p {
+        margin: 0.2rem 0;
+        color: $color-secundario;
+      }
+    }
+  }
+
+  .total {
+    font-size: 1.2rem;
+    margin-top: 1rem;
+    color: $color-texto;
+  }
+
+  .btn-vaciar {
+    margin-top: 1.5rem;
+    background-color: $color-primario;
+    color: #fff;
+    border: none;
+    padding: 0.7rem 1.5rem;
+    border-radius: 8px;
+    font-weight: 600;
+    cursor: pointer;
+
+    &:hover {
+      background-color: darken($color-primario, 10%);
+    }
+  }
+}
+
+.carrito-vacio {
+  text-align: center;
+  margin-top: 3rem;
+  font-size: 1.2rem;
+  color: $color-secundario;
+}

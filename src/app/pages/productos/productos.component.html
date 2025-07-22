@@ -1,0 +1,50 @@
+<!-- 🧭 Barra de categorías (copiada del inicio) -->
+<nav class="barra-categorias">
+  <ul class="lista-categorias">
+    <li *ngFor="let categoria of categorias" class="categoria-item" (click)="seleccionarCategoria(categoria)">
+      {{ categoria.nombre }}
+    </li>
+     <!-- 🛒 Botón de carrito dentro de contenedor negro -->
+        <li class="categoria-item carrito-btn">
+          <button class="btn-carrito-contenedor" (click)="irAVentas()" title="Ir a ventas">
+            <span class="carrito-texto">Carrito</span>
+            <span class="carrito-icono">🛒</span>
+          </button>
+        </li>
+  </ul>
+</nav>
+
+
+<div class="productos-container">
+  <!-- 🔍 Barra de búsqueda fija -->
+  <div class="barra-superior">
+    <input
+      type="text"
+      [(ngModel)]="terminoBusqueda"
+      (input)="aplicarFiltroBusqueda()"
+      placeholder="Buscar producto..."
+      class="input-busqueda"
+    />
+
+    <button class="btn-categorias" (click)="mostrarModalCategorias = !mostrarModalCategorias">
+      Filtrar por categoría
+    </button>
+  </div>
+
+
+  <!-- 📦 Modal lateral de categorías -->
+<div class="modal-categorias" *ngIf="mostrarModalCategorias">
+  <ul>
+    <li
+      *ngFor="let categoria of categorias"
+      [class.activa]="categoriaActual?.id === categoria.id"
+      (click)="seleccionarCategoria(categoria)">
+      {{ categoria.nombre }}
+    </li>
+  </ul>
+</div>
+
+
+  <!-- 🧩 Tarjetas de productos -->
+  <app-tarjeta-producto [productos]="productosFiltrados"></app-tarjeta-producto>
+</div>

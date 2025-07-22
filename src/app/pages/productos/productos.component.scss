@@ -1,0 +1,203 @@
+@use '../../shared/colores.scss' as *;
+@use '../../shared/tipografia.scss' as *;
+
+// 🧭 Barra superior de categorías
+.barra-categorias {
+  width: 100%;
+  background-color: #fff;
+  padding: 1rem 2rem;
+  margin-bottom: 2rem;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  border-bottom: 1px solid $color-borde;
+  box-shadow: 0 1px 6px rgba(0, 0, 0, 0.04);
+  box-sizing: border-box;
+  z-index: 100;
+
+  .lista-categorias {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 2rem;
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    align-items: center;
+
+    .categoria-item {
+      font-weight: 600;
+      font-size: 1rem;
+      color: $color-texto;
+      text-transform: capitalize;
+      cursor: pointer;
+      transition: color 0.2s ease;
+
+      &:hover {
+        color: $color-primario;
+      }
+
+      // 🛒 Contenedor especial para el botón de carrito
+      &.carrito-btn {
+        margin-left: auto;
+
+        .btn-carrito-contenedor {
+          display: flex;
+          align-items: center;
+          gap: 0.5rem;
+          background-color: #000;
+          color: #fff;
+          padding: 0.6rem 1.2rem;
+          border-radius: 8px;
+          border: none;
+          font-weight: 600;
+          font-size: 0.95rem;
+          cursor: pointer;
+          transition: transform 0.2s ease, background-color 0.2s ease;
+          white-space: nowrap;
+
+          .carrito-icono {
+            font-size: 1.2rem;
+            line-height: 1;
+          }
+
+          &:hover {
+            background-color: lighten(#000, 10%);
+            transform: translateY(-1px);
+          }
+
+          &:active {
+            transform: scale(0.98);
+          }
+        }
+      }
+    }
+  }
+
+    button {
+    background-color: $color-primario;
+    color: #fff;
+    border: none;
+    padding: 0.6rem 1.2rem;
+    border-radius: 8px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: background-color 0.2s ease;
+
+    &:hover {
+      background-color: darken($color-primario, 10%);
+    }
+
+    &:active {
+      transform: scale(0.97);
+    }
+  }
+
+
+  @media (max-width: 768px) {
+    flex-direction: column;
+    align-items: stretch;
+    padding: 1rem;
+
+    .lista-categorias {
+      justify-content: center;
+      gap: 1rem;
+
+      .categoria-item {
+        &.carrito-btn {
+          margin-left: 0;
+          margin-top: 1rem;
+          display: flex;
+          justify-content: center;
+          width: 100%;
+        }
+      }
+    }
+  }
+}
+
+// 🎯 Contenedor de productos
+.productos-container {
+  padding: 2rem;
+  display: flex;
+  flex-direction: column;
+  gap: 2rem;
+}
+
+// 🔍 Barra superior con input y botón de categorías
+.barra-superior {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 1rem;
+
+  .input-busqueda {
+    flex: 1;
+    min-width: 200px;
+    max-width: 400px;
+    padding: 0.6rem 1rem;
+    border: 1px solid $color-borde;
+    border-radius: 8px;
+    font-size: 1rem;
+    outline: none;
+    font-family: $fuente-principal;
+  }
+
+  .btn-categorias {
+    background-color: $color-primario;
+    color: #fff;
+    padding: 0.6rem 1.2rem;
+    border-radius: 8px;
+    font-weight: bold;
+    border: none;
+    cursor: pointer;
+    transition: background-color 0.2s ease;
+
+    &:hover {
+      background-color: darken($color-primario, 10%);
+    }
+  }
+}
+
+// 🧩 Modal con opciones de filtrado
+.modal-categorias {
+  background-color: #fff;
+  border: 1px solid $color-borde;
+  border-radius: 12px;
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.08);
+  padding: 1rem;
+  max-width: 320px;
+  font-family: $fuente-principal;
+
+  ul {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+
+    li {
+      padding: 0.7rem 1rem;
+      border-radius: 8px;
+      cursor: pointer;
+      color: $color-texto;
+      font-weight: 500;
+      transition: background-color 0.2s ease, color 0.2s ease;
+
+      // 🎯 Hover mejorado
+      &:hover {
+        background-color: lighten($color-primario, 42%);
+        color: $color-primario;
+      }
+
+      // ✅ Opción activa más suave y clara
+      &.activa {
+        background-color: $color-primario;
+        color: #fff;
+        font-weight: 600;
+      }
+    }
+  }
+}
+

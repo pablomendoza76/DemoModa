@@ -1,0 +1,37 @@
+<div class="tarjetas-container" *ngIf="productos.length > 0">
+  <div class="tarjeta" *ngFor="let producto of productos">
+    <img [src]="producto.imagen_url" alt="{{ producto.nombre }}" />
+    <h2>{{ producto.nombre }}</h2>
+    <p class="descripcion">{{ producto.descripcion }}</p>
+    <p class="precio">{{ producto.precio | currency }}</p>
+    <button (click)="abrirModal(producto)">Agregar Carrito</button>
+  </div>
+</div>
+
+<div class="sin-productos" *ngIf="productos?.length === 0">
+  No hay productos disponibles.
+</div>
+
+<!-- 🛒 Modal selección talla y cantidad -->
+<div class="modal-carrito" *ngIf="mostrarModal">
+  <div class="modal-contenido">
+    <h3>Agregar al carrito</h3>
+    <p>{{ productoSeleccionado?.nombre }}</p>
+
+    <label>Talla:</label>
+    <select [(ngModel)]="tallaSeleccionada">
+      <option disabled selected value="">Selecciona una talla</option>
+      <option *ngFor="let talla of productoSeleccionado?.tallas || ['S', 'M', 'L', 'XL']" [value]="talla">
+        {{ talla }}
+      </option>
+    </select>
+
+    <label>Cantidad:</label>
+    <input type="number" min="1" [(ngModel)]="cantidadSeleccionada" />
+
+    <div class="acciones">
+      <button (click)="cerrarModal()">Cancelar</button>
+      <button (click)="confirmarAgregar()">Agregar</button>
+    </div>
+  </div>
+</div>

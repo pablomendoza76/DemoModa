@@ -1,0 +1,59 @@
+  <div class="inicio-container" *ngIf="productoActual">
+    <!-- 🧭 Barra de categorías -->
+    <nav class="barra-categorias">
+      <ul class="lista-categorias">
+        <li *ngFor="let categoria of categorias" class="categoria-item" (click)="irAProductosPorCategoria(categoria)">
+    {{ categoria.nombre }}
+  </li>
+
+
+        <!-- 🛒 Botón de carrito dentro de contenedor negro -->
+        <li class="categoria-item carrito-btn">
+          <button class="btn-carrito-contenedor" (click)="irAVentas()" title="Ir a ventas">
+            <span class="carrito-texto">Carrito</span>
+            <span class="carrito-icono">🛒</span>
+          </button>
+        </li>
+      </ul>
+    </nav>
+
+    <!-- 🎠 Contenedor principal -->
+    <div class="carrusel-contenido">
+      <!-- 🧠 IZQUIERDA -->
+      <div class="panel panel-izquierda">
+        <p class="coleccion-texto">Summer collection</p>
+        <h1 class="nombre-producto">{{ productoActual.nombre }}</h1>
+        <p class="descripcion-producto">{{ productoActual.descripcion }}</p>
+      </div>
+
+      <!-- 👗 CENTRO -->
+      <div class="panel panel-centro">
+        <button class="flecha flecha-izquierda" (click)="mostrarAnterior()">&#10094;</button>
+        <img [src]="productoActual.imagen_url" alt="Imagen del producto" class="imagen-producto" />
+        <button class="flecha flecha-derecha" (click)="mostrarSiguiente()">&#10095;</button>
+      </div>
+
+      <!-- 📋 DERECHA -->
+      <div class="panel panel-derecha">
+        <ul class="detalle-lista">
+          <li><strong>REF:</strong> 7882/256</li>
+          <li><strong>Modelo:</strong> talla {{ productoActual.talla || 'N/A' }}</li>
+          <li><strong>Altura:</strong> 1.77 m</li>
+          <li><strong>Precio:</strong> {{ productoActual.precio | currency }}</li>
+        </ul>
+
+        <div class="selector-talla">
+          <div class="talla">XS</div>
+          <div class="talla">S</div>
+          <div class="talla">M</div>
+          <div class="talla">L</div>
+          <div class="talla">XL</div>
+          <div class="talla">XXL</div>
+        </div>
+
+        <div class="contenedor-boton">
+          <button class="boton-comprar">Shop</button>
+        </div>
+      </div>
+    </div>
+  </div>
