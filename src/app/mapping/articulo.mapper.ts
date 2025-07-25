@@ -76,16 +76,16 @@ export class ArticuloMapper {
   obtenerMasVendidos(): Observable<any[]> {
   return this.ventaService.obtenerMasVendidos().pipe(
     map(items => items.map(i => ({
+      id: i.id,
       nombre: i.nombre,
       descripcion: i.descripcion,
-      talla: i.talla,
-      precio: `$${Number(i.precio).toFixed(2)}`,
-      imagen_url: i.imagen_url,
-      total_unidades: Number(i.total_unidades),
-      total_ingresos: `$${Number(i.total_ingresos).toFixed(2)}`
+      precio: i.precio,
+      imagen_url: i.imagen,
+      total_vendidos: Number(i.total_vendidos)
     })))
   );
 }
+
 
 
   obtenerCamposEdicion(articulo: any): any[] {

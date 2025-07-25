@@ -6,7 +6,8 @@ import { Observable } from 'rxjs';
 @Injectable({ providedIn: 'root' })
 export class VentaService {
   private baseUrl = `${environment.supabaseUrl}/rest/v1/ventas`;
-  private rpcUrl = `${environment.supabaseUrl}/rest/v1/rpc/obtener_top_productos`;
+  private registrarVentaUrl = `${environment.supabaseUrl}/rest/v1/rpc/registrar_venta`;
+  private obtenerTopProductosUrl = `${environment.supabaseUrl}/rest/v1/rpc/obtener_top_productos`;
 
   private headers = new HttpHeaders({
     apikey: environment.supabaseKey,
@@ -17,12 +18,27 @@ export class VentaService {
 
   constructor(private http: HttpClient) {}
 
-  registrarVenta(venta: any): Observable<any> {
-    return this.http.post(this.baseUrl, venta, {
-      headers: this.headers
-    });
-  }
+  /**
+   * Registrar una venta usando función RPC
+   */
+  registrarVenta(pedido: any): Observable<any> {
+  console.log("📨 Pedido que se va a enviar:", pedido);
+  return this.http.post(`${environment.supabaseUrl}/rest/v1/rpc/registrar_venta`, {
+    correo: pedido.correo_cliente,
+    nombre: pedido.nombre_cliente,
+    direccion: pedido.direccion,
+    telefono: pedido.telefono,
+    metodo: pedido.metodoPago,
+    detalles: pedido.detallesPago || {},
+    productos: pedido.productos // Incluye nombre, talla, precio_unitario, cantidad
+  }, {
+    headers: this.headers
+  });
+}
 
+  /**
+   * Obtener todas las ventas con datos del producto asociado
+   */
   obtenerVentas(): Observable<any[]> {
     return this.http.get<any[]>(this.baseUrl, {
       headers: this.headers,
@@ -33,11 +49,25 @@ export class VentaService {
   }
 
   /**
-   * Obtener los productos más vendidos usando la función RPC de Supabase
+   * Obtener los productos más vendidos
    */
   obtenerMasVendidos(): Observable<any[]> {
-    return this.http.post<any[]>(this.rpcUrl, {}, {
+    return this.http.post<any[]>(this.obtenerTopProductosUrl, {}, {
       headers: this.headers
     });
   }
+
+  /**
+ * Obtener ventas por correo del cliente
+ */
+obtenerVentasPorCorreo(correo: string): Observable<any[]> {
+  return this.http.get<any[]>(this.baseUrl, {
+    headers: this.headers,
+    params: {
+      correo_cliente: `eq.${correo}`,
+      select: '*'
+    }
+  });
+}
+
 }

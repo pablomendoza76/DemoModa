@@ -1,19 +1,52 @@
 <!-- 🧭 Barra de categorías (copiada del inicio) -->
+<!-- 🧭 Barra de categorías -->
 <nav class="barra-categorias">
+  <div class="logo-navbar">
+    <img src="/img/fondo1.png" alt="Logo" />
+  </div>
   <ul class="lista-categorias">
-    <li *ngFor="let categoria of categorias" class="categoria-item" (click)="seleccionarCategoria(categoria)">
+    <li
+      *ngFor="let categoria of categorias"
+      class="categoria-item"
+      (click)="seleccionarCategoria(categoria)"
+    >
       {{ categoria.nombre }}
     </li>
-     <!-- 🛒 Botón de carrito dentro de contenedor negro -->
-        <li class="categoria-item carrito-btn">
-          <button class="btn-carrito-contenedor" (click)="irAVentas()" title="Ir a ventas">
-            <span class="carrito-texto">Carrito</span>
-            <span class="carrito-icono">🛒</span>
-          </button>
-        </li>
+
+    <!-- 🛒 Botón de carrito -->
+    <li class="categoria-item carrito-btn">
+      <button
+        class="btn-carrito-contenedor boton-invertido"
+        (click)="irAVentas()"
+        title="Ir a ventas"
+      >
+        <span class="carrito-texto">Carrito</span>
+        <span class="carrito-icono">🛒</span>
+      </button>
+    </li>
+
+    <!-- 🔐 Botón de sesión -->
+    <li class="categoria-item">
+      <button
+        class="btn-carrito-contenedor boton-invertido"
+        *ngIf="!usuarioAutenticado"
+        (click)="iniciarSesion()"
+        title="Iniciar sesión"
+      >
+        <span class="carrito-texto">Iniciar sesión</span>
+      </button>
+
+      <button
+        class="btn-carrito-contenedor boton-invertido"
+        *ngIf="usuarioAutenticado"
+        (click)="cerrarSesion()"
+        title="Cerrar sesión"
+      >
+        <span class="carrito-texto">Cerrar sesión</span>
+      </button>
+    </li>
   </ul>
 </nav>
-
 
 <div class="productos-container">
   <!-- 🔍 Barra de búsqueda fija -->
@@ -26,24 +59,26 @@
       class="input-busqueda"
     />
 
-    <button class="btn-categorias" (click)="mostrarModalCategorias = !mostrarModalCategorias">
+    <button
+      class="btn-categorias"
+      (click)="mostrarModalCategorias = !mostrarModalCategorias"
+    >
       Filtrar por categoría
     </button>
   </div>
 
-
   <!-- 📦 Modal lateral de categorías -->
-<div class="modal-categorias" *ngIf="mostrarModalCategorias">
-  <ul>
-    <li
-      *ngFor="let categoria of categorias"
-      [class.activa]="categoriaActual?.id === categoria.id"
-      (click)="seleccionarCategoria(categoria)">
-      {{ categoria.nombre }}
-    </li>
-  </ul>
-</div>
-
+  <div class="modal-categorias" *ngIf="mostrarModalCategorias">
+    <ul>
+      <li
+        *ngFor="let categoria of categorias"
+        [class.activa]="categoriaActual?.id === categoria.id"
+        (click)="seleccionarCategoria(categoria)"
+      >
+        {{ categoria.nombre }}
+      </li>
+    </ul>
+  </div>
 
   <!-- 🧩 Tarjetas de productos -->
   <app-tarjeta-producto [productos]="productosFiltrados"></app-tarjeta-producto>

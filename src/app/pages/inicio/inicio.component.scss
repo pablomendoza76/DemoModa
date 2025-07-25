@@ -16,13 +16,13 @@
   padding: 1rem 2rem;
   margin-bottom: 2rem;
   display: flex;
-  justify-content: center; // ✅ centra todo horizontalmente
+  justify-content: center;
   align-items: center;
   border-bottom: 1px solid $color-borde;
   box-shadow: 0 1px 6px rgba(0, 0, 0, 0.04);
   box-sizing: border-box;
   z-index: 100;
-  overflow-x: hidden;
+  max-height: 5rem;
 
   .lista-categorias {
     display: flex;
@@ -79,6 +79,37 @@
           }
         }
       }
+
+      // 🔐 Botón de iniciar sesión (blanco con borde negro)
+      .boton-invertido {
+        display: flex;
+        align-items: center;
+        gap: 0.5rem;
+        background-color: #fff;
+        color: #000;
+        border: 2px solid #000;
+        padding: 0.6rem 1.2rem;
+        border-radius: 8px;
+        font-weight: 600;
+        font-size: 0.95rem;
+        cursor: pointer;
+        transition: background-color 0.2s ease, transform 0.2s ease;
+        white-space: nowrap;
+
+        .carrito-icono {
+          font-size: 1.2rem;
+          line-height: 1;
+        }
+
+        &:hover {
+          background-color: #f4f4f4;
+          transform: translateY(-1px);
+        }
+
+        &:active {
+          transform: scale(0.98);
+        }
+      }
     }
   }
 
@@ -103,9 +134,29 @@
       }
     }
   }
+
+  .logo-navbar {
+  display: flex;
+  align-items: center;
+
+  img {
+    height: 120px;
+    width: auto;
+    object-fit: contain;
+  }
 }
 
+}
 
+// ✅ Subtítulo bajo la barra de categorías
+.titulo-seccion {
+  text-align: center;
+  font-size: 1.8rem;
+  font-weight: bold;
+  color: $color-primario;
+  margin-bottom: 2.5rem;
+  letter-spacing: 0.5px;
+}
 
 // 🎠 Contenedor principal
 .carrusel-contenido {
@@ -199,7 +250,7 @@
   display: flex;
   flex-direction: column;
   gap: 2rem;
-  justify-content: center; // ✅ centra el contenido verticalmente
+  justify-content: center;
 
   .detalle-lista {
     list-style: none;
@@ -246,7 +297,6 @@
     }
   }
 
-  // 🛒 Botón dentro de contenedor negro
   .contenedor-boton {
     background-color: #000;
     border-radius: 12px;
@@ -275,4 +325,30 @@
       }
     }
   }
+
+  
 }
+
+.mensaje-toast {
+  position: fixed;
+  top: 1.5rem;
+  right: 1.5rem;
+  background-color: $color-primario;
+  color: white;
+  padding: 1rem 1.8rem;
+  border-radius: 8px;
+  font-weight: bold;
+  font-size: 0.95rem;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
+  opacity: 0;
+  pointer-events: none;
+  transform: translateY(-10px);
+  transition: opacity 0.3s ease, transform 0.3s ease;
+  z-index: 999;
+}
+
+.mensaje-toast.visible {
+  opacity: 1;
+  transform: translateY(0);
+}
+

@@ -252,3 +252,177 @@
     }
   }
 }
+
+// 🌫️ Fondo oscurecido del modal
+.modal-overlay {
+  position: fixed;
+  inset: 0;
+  background-color: rgba(0, 0, 0, 0.3);
+  z-index: 1000;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: 1rem;
+  overflow: hidden;
+}
+
+// 📦 Contenido del modal
+.modal-content {
+  background-color: #fff;
+  color: #111;
+  border-radius: 1.5rem;
+  width: 100%;
+  max-width: 540px;
+  max-height: 90vh;
+  overflow-y: auto;
+  overflow-x: hidden;
+  padding: 2rem;
+  display: flex;
+  flex-direction: column;
+  box-shadow: 0 25px 40px rgba(0, 0, 0, 0.15);
+}
+
+// 🧭 Encabezado del modal
+.modal-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+
+  h2 {
+    font-size: 1.4rem;
+    font-weight: 600;
+    margin: 0;
+  }
+
+  .cerrar {
+    background: none;
+    border: none;
+    font-size: 1.6rem;
+    color: #666;
+    cursor: pointer;
+    transition: color 0.2s ease;
+
+    &:hover {
+      color: #000;
+    }
+  }
+}
+
+// 📄 Formulario moderno alineado
+.formulario-facturacion {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+  width: 100%;
+
+  label {
+    font-weight: 500;
+    font-size: 0.95rem;
+    color: #222;
+    margin-bottom: 0.3rem;
+  }
+
+  input,
+  textarea,
+  select {
+    width: 100%;
+    max-width: 100%;
+    box-sizing: border-box;
+    padding: 0.75rem 1rem;
+    font-size: 1rem;
+    border-radius: 0.8rem;
+    border: 1px solid #ddd;
+    background-color: #f9f9f9;
+    color: #111;
+    transition: border 0.2s, box-shadow 0.2s;
+
+    &::placeholder {
+      color: #aaa;
+    }
+
+    &:focus {
+      background-color: #fff;
+      border-color: #aaa;
+      outline: none;
+      box-shadow: 0 0 0 2px rgba(0, 0, 0, 0.05);
+    }
+  }
+
+  textarea {
+    resize: vertical;
+    min-height: 90px;
+  }
+
+  // 🧾 Botón confirmar moderno
+  .btn.confirmar {
+    margin-top: 0.5rem;
+    padding: 0.85rem;
+    font-size: 1rem;
+    font-weight: 600;
+    background-color: #000;
+    color: #fff;
+    border: none;
+    border-radius: 0.8rem;
+    cursor: pointer;
+    transition: background 0.25s ease;
+
+    &:hover {
+      background-color: #222;
+    }
+
+    &:active {
+      transform: scale(0.98);
+    }
+  }
+}
+
+// 🛍 Lista del carrito dentro del modal
+.resumen-carrito-modal {
+  border-top: 1px solid #eee;
+  padding-top: 1rem;
+  margin-top: 1rem;
+
+  h3 {
+    font-size: 1.1rem;
+    font-weight: 500;
+    color: #333;
+    margin-bottom: 0.5rem;
+  }
+
+  ul {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+
+    li {
+      font-size: 0.95rem;
+      color: #555;
+      padding: 0.3rem 0;
+      border-bottom: 1px dashed #eee;
+    }
+  }
+}
+
+// 💵 Total alineado a la derecha
+.total-pagar {
+  font-weight: 600;
+  font-size: 1.05rem;
+  text-align: right;
+  color: #111;
+  margin-top: 0.5rem;
+}
+
+// 🧾 Alineación de botones finales
+.formulario-facturacion .btn.confirmar,
+.modal-content .btn.confirmar {
+  margin-top: 1rem;
+  margin-bottom: 0.5rem;
+}
+
+.venta-card {
+  background: #f8f8f8;
+  padding: 1rem;
+  border-radius: 8px;
+  margin-bottom: 1rem;
+}
+

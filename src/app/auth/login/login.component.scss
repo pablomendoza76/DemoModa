@@ -1,0 +1,167 @@
+@use '../../shared/colores.scss' as *;
+@use '../../shared/tipografia.scss' as *;
+
+// Contenedor doble: imagen + formulario
+.contenedor-login-doble {
+  display: flex;
+  justify-content: center;
+  align-items: stretch;
+  max-width: 960px;
+  margin: 4rem auto;
+  background-color: $color-fondo-principal;
+  border-radius: 1rem;
+  box-shadow: 0 0 20px $color-sombra;
+  overflow: hidden;
+
+  .contenedor-login {
+    flex: 1;
+    padding: 2.5rem 2rem;
+    text-align: center;
+    font-family: $fuente-principal;
+
+    .titulo-login {
+      font-size: $titulo-grande;
+      color: $color-primario;
+      margin-bottom: 0.6rem;
+      font-weight: $font-bold;
+    }
+
+    .texto-login {
+      font-size: $texto-base;
+      color: $color-texto-claro;
+      margin-bottom: 2rem;
+      font-weight: $font-regular;
+    }
+
+    .formulario-login {
+      display: flex;
+      flex-direction: column;
+      gap: 1.2rem;
+      margin-bottom: 1.8rem;
+      text-align: left;
+
+      .campo {
+        display: flex;
+        flex-direction: column;
+
+        label {
+          margin-bottom: 0.3rem;
+          font-weight: $font-medium;
+          font-size: $texto-base;
+          color: $color-texto;
+        }
+
+        input {
+          padding: 0.75rem 1rem;
+          border: 1px solid $color-borde;
+          border-radius: 0.5rem;
+          font-size: $texto-base;
+          background-color: $color-fondo-tarjeta;
+          color: $color-texto;
+          transition: border 0.2s ease;
+
+          &:focus {
+            border-color: $color-acento;
+            outline: none;
+          }
+        }
+      }
+
+      .boton-principal {
+        margin-top: 0.5rem;
+        background-color: $color-boton;
+        color: $color-boton-texto;
+        border: none;
+        padding: 0.9rem 1.5rem;
+        font-weight: $font-bold;
+        font-size: $texto-base;
+        border-radius: 0.5rem;
+        cursor: pointer;
+        transition: background-color 0.3s ease;
+
+        &:hover {
+          background-color: $color-boton-hover;
+        }
+      }
+    }
+
+    .boton-invertido {
+      background-color: transparent;
+      color: $color-boton;
+      border: 2px solid $color-boton;
+      border-radius: 0.5rem;
+      padding: 0.8rem 1.5rem;
+      font-weight: $font-bold;
+      font-size: $texto-base;
+      cursor: pointer;
+      transition: all 0.3s ease;
+
+      &:hover {
+        background-color: $color-boton-hover;
+        color: $color-boton-texto;
+      }
+
+      .icono-google {
+        margin-right: 0.5rem;
+        font-size: 1.2rem;
+        vertical-align: middle;
+      }
+    }
+
+    .separador {
+      margin: 2rem 0;
+      border: none;
+      height: 1px;
+      background-color: $color-borde;
+    }
+
+    .error-mensaje {
+      color: $color-acento;
+      font-size: $texto-secundario;
+      margin-top: -0.5rem;
+      font-weight: $font-medium;
+      text-align: left;
+    }
+  }
+
+  .imagen-login {
+    flex: 1;
+    display: flex;
+    align-items: stretch;
+    justify-content: center;
+    background-color: $color-secundario;
+
+    img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      display: block;
+    }
+  }
+}
+
+// 📱 Responsive
+@media (max-width: 768px) {
+  .contenedor-login-doble {
+    flex-direction: column;
+
+    .imagen-login {
+      display: none;
+    }
+
+    .contenedor-login {
+      max-width: 100%;
+      padding: 2rem 1.5rem;
+
+      .titulo-login {
+        font-size: $titulo-mediano;
+      }
+
+      .boton-principal,
+      .boton-invertido {
+        font-size: $texto-secundario;
+        padding: 0.7rem 1rem;
+      }
+    }
+  }
+}

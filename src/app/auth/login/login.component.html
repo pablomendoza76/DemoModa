@@ -1,0 +1,56 @@
+<div class="contenedor-login-doble">
+  <!-- Columna Izquierda: formulario -->
+  <div class="contenedor-login">
+    <ng-container *ngIf="!usuario; else logueado">
+      <h2 class="titulo-login">Bienvenido</h2>
+      <p class="texto-login">Inicia sesión para continuar</p>
+
+      <form class="formulario-login" (ngSubmit)="loginConCredenciales()">
+        <div class="campo">
+          <label for="email">Correo electrónico</label>
+          <input
+            id="email"
+            type="email"
+            [(ngModel)]="credenciales.email"
+            name="email"
+            required
+          />
+        </div>
+
+        <div class="campo">
+          <label for="password">Contraseña</label>
+          <input
+            id="password"
+            type="password"
+            [(ngModel)]="credenciales.password"
+            name="password"
+            required
+          />
+        </div>
+
+        <button type="submit" class="boton-principal">
+          Iniciar sesión con correo
+        </button>
+      </form>
+
+      <hr class="separador" />
+
+      <button class="boton-invertido" (click)="login()">
+        <span class="icono-google"></span> Iniciar sesión con Google
+      </button>
+    </ng-container>
+
+    <ng-template #logueado>
+      <h2 class="titulo-login">Hola, {{ usuario?.email }}</h2>
+
+      <button class="boton-invertido" (click)="logout()">
+        Cerrar sesión
+      </button>
+    </ng-template>
+  </div>
+
+  <!-- Columna Derecha: imagen decorativa -->
+  <div class="imagen-login">
+    <img src="/img/logo1.jpg" alt="Imagen login" />
+  </div>
+</div>

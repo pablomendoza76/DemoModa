@@ -1,8 +1,9 @@
-import { Component, OnInit } from '@angular/core';
-import { ArticuloMapper } from '../../mapping/articulo.mapper';
-import { CommonModule } from '@angular/common';
+import { Component, inject, PLATFORM_ID } from '@angular/core';
+import { isPlatformBrowser, CommonModule } from '@angular/common';
 import { Router } from '@angular/router';
-
+import { CarritoService } from '../../services/carrito.service';
+import { ArticuloMapper } from '../../mapping/articulo.mapper';
+import { AuthService } from '../../auth/auth.service';
 
 @Component({
   selector: 'app-inicio',
@@ -11,21 +12,59 @@ import { Router } from '@angular/router';
   templateUrl: './inicio.component.html',
   styleUrls: ['./inicio.component.scss'],
 })
-export class InicioComponent implements OnInit {
+export class InicioComponent {
   productos: any[] = [];
   categorias: any[] = [];
   indiceActual = 0;
+  mensajeVisible: boolean = false;
+  tallaSeleccionada: string | null = null;
+  usuarioAutenticado: boolean = false;
+  esSofia: boolean = false;
 
-  constructor(private articuloMapper: ArticuloMapper, private router: Router) {}
+  private readonly platformId = inject(PLATFORM_ID);
 
-  ngOnInit(): void {
-    this.cargarProductosMasVendidos();
-    this.cargarCategorias();
+  constructor(
+    private articuloMapper: ArticuloMapper,
+    private carritoService: CarritoService,
+    private router: Router,
+    private authService: AuthService
+  ) {
+    if (isPlatformBrowser(this.platformId)) {
+      setTimeout(() => {
+        this.cargarDatos();
+      }, 0);
+    }
   }
 
-  /**
-   * Cargar productos más vendidos desde el mapper
-   */
+  private cargarDatos(): void {
+    this.cargarProductosMasVendidos();
+    this.cargarCategorias();
+    this.verificarSesion();
+  }
+
+  private verificarSesion(): void {
+    try {
+      const sesion = this.authService.obtenerUsuarioLocal();
+      this.usuarioAutenticado = !!sesion;
+      this.esSofia = sesion?.correo === 'sofia@ejemplo.com';
+
+      this.authService.escucharCambioSesion(() => {
+        const nuevaSesion = this.authService.obtenerUsuarioLocal();
+        this.usuarioAutenticado = !!nuevaSesion;
+        this.esSofia = nuevaSesion?.correo === 'sofia@ejemplo.com';
+      });
+    } catch (e) {
+      console.warn('⚠️ Error verificando sesión:', e);
+    }
+  }
+
+  async cerrarSesion(): Promise<void> {
+    await this.authService.logout();
+    this.usuarioAutenticado = false;
+    this.esSofia = false;
+    this.router.navigate(['/inicio']);
+  }
+
   cargarProductosMasVendidos(): void {
     this.articuloMapper.obtenerMasVendidos().subscribe((res) => {
       this.productos = res;
@@ -33,57 +72,68 @@ export class InicioComponent implements OnInit {
   }
 
   irAVentas(): void {
-  window.location.href = '/ventas'; // Puedes reemplazar esto por [routerLink] si usas rutas Angular
-}
+    this.router.navigate(['/ventas']);
+  }
 
+  irAMetricas(): void {
+    this.router.navigate(['/metricas']);
+  }
 
-  /**
-   * Cargar categorías desde el servicio y actualizar campo dinámico
-   */
-    cargarCategorias(): void {
+  cargarCategorias(): void {
     this.articuloMapper.obtenerCategoriasPlano().subscribe((categorias) => {
-      console.log(categorias)
       this.categorias = categorias || [];
     });
   }
 
-
-
-  /**
-   * Cambiar al producto anterior en el carrusel
-   */
   mostrarAnterior(): void {
     this.indiceActual = (this.indiceActual - 1 + this.productos.length) % this.productos.length;
   }
 
-  /**
-   * Cambiar al producto siguiente en el carrusel
-   */
   mostrarSiguiente(): void {
     this.indiceActual = (this.indiceActual + 1) % this.productos.length;
   }
 
-  /**
-   * Producto actualmente visible
-   */
   get productoActual() {
     return this.productos[this.indiceActual];
   }
 
+  irAProductosPorCategoria(categoria: any): void {
+    this.router.navigate(['/productos'], {
+      queryParams: { categoriaId: categoria.id, nombre: categoria.nombre },
+    });
+  }
 
-  /**
- * Navega al componente de productos filtrando por categoría
- */
-irAProductosPorCategoria(categoria: any): void {
-  console.log('➡️ Redireccionando a productos con:', categoria);
-  const ruta = `/productos?categoriaId=${categoria.id}&nombre=${encodeURIComponent(categoria.nombre)}`;
-  console.log('📌 Ruta construida:', ruta);
-  
-  this.router.navigate(['/productos'], {
-    queryParams: { categoriaId: categoria.id, nombre: categoria.nombre }
-  });
-}
+  agregarAlCarrito(producto: any): void {
+    if (!this.tallaSeleccionada) {
+      alert('Por favor selecciona una talla antes de agregar al carrito.');
+      return;
+    }
 
+    const carrito = this.carritoService.obtenerCarrito();
+    const productoConTalla = { ...producto, talla: this.tallaSeleccionada };
 
+    const existente = carrito.find(
+      (item) => item.id === producto.id && item.talla === this.tallaSeleccionada
+    );
 
+    if (existente) {
+      existente.cantidad += 1;
+    } else {
+      carrito.push({ ...productoConTalla, cantidad: 1 });
+    }
+
+    this.carritoService.actualizarCarrito(carrito);
+    this.mostrarMensajeTemporal();
+  }
+
+  mostrarMensajeTemporal(): void {
+    this.mensajeVisible = true;
+    setTimeout(() => {
+      this.mensajeVisible = false;
+    }, 2500);
+  }
+
+  iniciarSesion(): void {
+    this.router.navigate(['/login']);
+  }
 }
