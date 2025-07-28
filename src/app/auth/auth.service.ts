@@ -30,9 +30,15 @@ export class AuthService {
    * Inicia sesión con Google
    */
   async loginConGoogle(): Promise<void> {
-    const { error } = await this.supabase.auth.signInWithOAuth({ provider: 'google' });
-    if (error) throw error;
-  }
+  const { error } = await this.supabase.auth.signInWithOAuth({
+    provider: 'google',
+    options: {
+      redirectTo: window.location.origin + '/inicio'  // o '/dashboard' o lo que quieras
+    }
+  });
+  if (error) throw error;
+}
+
 
   /**
    * Inicia sesión desde tabla personalizada
