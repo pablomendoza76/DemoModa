@@ -12,6 +12,17 @@
       {{ categoria.nombre }}
     </li>
 
+    <!-- 📊 Botón métricas (solo para Sofía) -->
+    <li class="categoria-item" *ngIf="esSofia">
+      <button
+        class="btn-carrito-contenedor boton-invertido"
+        (click)="irAMetricas()"
+        title="Ver métricas"
+      >
+        <span class="carrito-texto">Ver métricas</span>
+      </button>
+    </li>
+
     <!-- 🛒 Botón de carrito -->
     <li class="categoria-item carrito-btn">
       <button
@@ -21,17 +32,6 @@
       >
         <span class="carrito-texto">Carrito</span>
         <span class="carrito-icono">🛒</span>
-      </button>
-    </li>
-
-    <!-- 📊 Botón métricas (solo para Sofía) -->
-    <li class="categoria-item" *ngIf="esSofia">
-      <button
-        class="btn-carrito-contenedor boton-invertido"
-        (click)="irAMetricas()"
-        title="Ver métricas"
-      >
-        <span class="carrito-texto">Ver métricas</span>
       </button>
     </li>
 
@@ -61,21 +61,32 @@
 <div class="productos-container">
   <!-- 🔍 Barra de búsqueda fija -->
   <div class="barra-superior">
-    <input
-      type="text"
-      [(ngModel)]="terminoBusqueda"
-      (input)="aplicarFiltroBusqueda()"
-      placeholder="Buscar producto..."
-      class="input-busqueda"
-    />
+  <input
+    type="text"
+    [(ngModel)]="terminoBusqueda"
+    (input)="aplicarFiltroBusqueda()"
+    placeholder="Buscar producto..."
+    class="input-busqueda"
+  />
 
+  <div class="acciones-derecha">
     <button
       class="btn-categorias"
       (click)="mostrarModalCategorias = !mostrarModalCategorias"
     >
-      Filtrar por categoría
+      🔽 Filtrar por categoría
+    </button>
+
+    <button
+      class="btn-crear-producto"
+      *ngIf="esSofia"
+      (click)="abrirModalCrearProducto()"
+    >
+      ➕ Crear producto
     </button>
   </div>
+</div>
+
 
   <!-- 📦 Modal lateral de categorías -->
   <div class="modal-categorias" *ngIf="mostrarModalCategorias">
@@ -96,3 +107,114 @@
     [mostrarBotonEditar]="esSofia"
   ></app-tarjeta-producto>
 </div>
+
+<!-- 🧾 Modal para crear producto -->
+<div class="modal-crear-producto" *ngIf="mostrarModalCrearProducto">
+  <div class="modal-contenido">
+    <h2>Crear nuevo producto</h2>
+
+    <form (ngSubmit)="guardarProducto()" #formProducto="ngForm">
+      <div class="campo-formulario">
+        <label for="nombre">Nombre *</label>
+        <input
+          type="text"
+          id="nombre"
+          [(ngModel)]="nuevoProducto.nombre"
+          name="nombre"
+          required
+        />
+      </div>
+
+      <div class="campo-formulario">
+        <label for="descripcion">Descripción</label>
+        <textarea
+          id="descripcion"
+          [(ngModel)]="nuevoProducto.descripcion"
+          name="descripcion"
+        ></textarea>
+      </div>
+
+      <div class="campo-formulario">
+        <label for="precio">Precio *</label>
+        <input
+          type="number"
+          id="precio"
+          [(ngModel)]="nuevoProducto.precio"
+          name="precio"
+          min="0"
+          step="0.01"
+          required
+        />
+      </div>
+
+      <div class="campo-formulario">
+        <label for="talla">Talla</label>
+        <input
+          type="text"
+          id="talla"
+          [(ngModel)]="nuevoProducto.talla"
+          name="talla"
+        />
+      </div>
+
+      <div class="campo-formulario">
+        <label for="color">Color</label>
+        <input
+          type="text"
+          id="color"
+          [(ngModel)]="nuevoProducto.color"
+          name="color"
+        />
+      </div>
+
+      <div class="campo-formulario">
+        <label for="tipo_genero">Género *</label>
+        <select
+          id="tipo_genero"
+          [(ngModel)]="nuevoProducto.tipo_genero"
+          name="tipo_genero"
+          required
+        >
+          <option [ngValue]="null">Seleccione un género</option>
+          <option value="mujer">Mujer</option>
+          <option value="hombre">Hombre</option>
+          <option value="unisex">Unisex</option>
+        </select>
+      </div>
+
+      <div class="campo-formulario">
+        <label for="categoria_id">Categoría</label>
+        <select
+          id="categoria_id"
+          [(ngModel)]="nuevoProducto.categoria_id"
+          name="categoria_id"
+        >
+          <option [ngValue]="null">Seleccione una categoría</option>
+          <option
+            *ngFor="let cat of categorias"
+            [ngValue]="cat.id"
+            [disabled]="cat.id === 'todos'"
+          >
+            {{ cat.nombre }}
+          </option>
+        </select>
+      </div>
+
+      <div class="campo-formulario">
+        <label for="imagen_url">URL de Imagen</label>
+        <input
+          type="text"
+          id="imagen_url"
+          [(ngModel)]="nuevoProducto.imagen_url"
+          name="imagen_url"
+        />
+      </div>
+
+      <div class="modal-acciones">
+        <button type="button" (click)="cerrarModalCrearProducto()">Cancelar</button>
+        <button type="submit" [disabled]="formProducto.invalid">Guardar</button>
+      </div>
+    </form>
+  </div>
+</div>
+

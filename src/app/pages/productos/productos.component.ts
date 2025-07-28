@@ -24,6 +24,15 @@ export class ProductosComponent implements OnInit {
   terminoBusqueda: string = '';
   mostrarModalCategorias = false;
 
+  // ✅ Modal de creación de producto
+  mostrarModalCrearProducto = false;
+  nuevoProducto: any = {
+    nombre: '',
+    descripcion: '',
+    precio: 0,
+    categoria_id: null
+  };
+
   usuarioAutenticado: boolean = false;
   esSofia: boolean = false;
 
@@ -133,5 +142,38 @@ export class ProductosComponent implements OnInit {
     });
 
     this.cargarProductos();
+  }
+
+  // ✅ Métodos para crear producto
+  abrirModalCrearProducto(): void {
+    this.nuevoProducto = {
+      nombre: '',
+      descripcion: '',
+      precio: 0,
+      categoria_id: null
+    };
+    this.mostrarModalCrearProducto = true;
+  }
+
+  cerrarModalCrearProducto(): void {
+    this.mostrarModalCrearProducto = false;
+  }
+
+  guardarProducto(): void {
+    // Asignar categoría si hay una seleccionada
+    if (this.categoriaActual?.id !== 'todos') {
+      this.nuevoProducto.categoria_id = this.categoriaActual.id;
+    }
+
+    this.articuloService.crearArticulo(this.nuevoProducto).subscribe({
+      next: () => {
+        this.cerrarModalCrearProducto();
+        this.cargarProductos();
+      },
+      error: (err) => {
+        console.error('Error al crear producto:', err);
+        alert('No se pudo crear el producto.');
+      }
+    });
   }
 }
