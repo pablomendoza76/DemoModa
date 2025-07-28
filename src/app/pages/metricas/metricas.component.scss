@@ -11,24 +11,6 @@
   gap: 2rem;
   min-height: 100vh;
 
-  h2 {
-    font-size: tipografia.$titulo-mediano;
-    font-weight: tipografia.$font-bold;
-    margin-bottom: 1rem;
-    color: colores.$color-primario;
-    border-left: 4px solid colores.$color-acento;
-    padding-left: 1rem;
-  }
-
-  ngx-charts-pie-chart,
-  ngx-charts-bar-vertical {
-    padding: 1rem;
-    border-radius: 0.75rem;
-    border: 1px solid colores.$color-borde;
-    background-color: colores.$color-fondo-tarjeta;
-    box-shadow: 0 4px 12px colores.$color-sombra;
-  }
-
   .boton-volver {
     align-self: flex-start;
     background-color: colores.$color-boton;
@@ -46,16 +28,42 @@
     }
   }
 
-  @media (max-width: 768px) {
-    padding: 1rem;
+  .grafico-seccion {
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+
+    h2 {
+      font-size: tipografia.$titulo-mediano;
+      font-weight: tipografia.$font-bold;
+      margin: 0;
+      color: colores.$color-primario;
+      border-left: 4px solid colores.$color-acento;
+      padding-left: 1rem;
+    }
 
     ngx-charts-pie-chart,
     ngx-charts-bar-vertical {
-      padding: 0.5rem;
+      padding: 1rem;
+      border-radius: 0.75rem;
+      border: 1px solid colores.$color-borde;
+      background-color: colores.$color-fondo-tarjeta;
+      box-shadow: 0 4px 12px colores.$color-sombra;
     }
+  }
 
-    h2 {
-      font-size: tipografia.$titulo-pequeño;
+  @media (max-width: 768px) {
+    padding: 1rem;
+
+    .grafico-seccion {
+      ngx-charts-pie-chart,
+      ngx-charts-bar-vertical {
+        padding: 0.5rem;
+      }
+
+      h2 {
+        font-size: tipografia.$titulo-pequeño;
+      }
     }
 
     .boton-volver {

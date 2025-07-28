@@ -5,13 +5,15 @@ import { Router } from '@angular/router';
 import { Location } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { VentaService } from '../../services/ventas.service';
+import { AvatarComponent } from '../../shared/avatar/avatar.component'; // ajusta la ruta si es necesario
+
 
 @Component({
   selector: 'app-carrito',
   standalone: true,
-  imports: [CommonModule, FormsModule],
+  imports: [CommonModule, FormsModule, AvatarComponent],
   templateUrl: './carrito.component.html',
-  styleUrls: ['./carrito.component.scss']
+  styleUrls: ['./carrito.component.scss'],
 })
 export class CarritoComponent implements OnInit {
   carrito: any[] = [];
@@ -21,7 +23,7 @@ export class CarritoComponent implements OnInit {
   descuento: number = 0;
   mostrarModalFacturacion: boolean = false;
   mostrarModalHistorial = false;
-ventasCliente: any[] = [];
+  ventasCliente: any[] = [];
 
   datosFactura = {
     nombre: '',
@@ -33,14 +35,14 @@ ventasCliente: any[] = [];
     tarjetaNombre: '',
     tarjetaExpiracion: '',
     tarjetaCVV: '',
-    paypalCorreo: ''
+    paypalCorreo: '',
   };
 
   constructor(
     private carritoService: CarritoService,
     private router: Router,
     private location: Location,
-    private ventaService : VentaService,
+    private ventaService: VentaService
   ) {}
 
   ngOnInit(): void {
@@ -61,8 +63,11 @@ ventasCliente: any[] = [];
   }
 
   calcularTotal(): void {
-    this.total = this.carrito.reduce((acum, item) => acum + item.precio * item.cantidad, 0);
-    this.totalConDescuento = this.total - (this.total * this.descuento);
+    this.total = this.carrito.reduce(
+      (acum, item) => acum + item.precio * item.cantidad,
+      0
+    );
+    this.totalConDescuento = this.total - this.total * this.descuento;
     console.log('💰 Total sin descuento:', this.total);
     console.log('💸 Total con descuento:', this.totalConDescuento);
   }
@@ -82,7 +87,7 @@ ventasCliente: any[] = [];
   }
 
   removerItem(item: any): void {
-    this.carrito = this.carrito.filter(p => p !== item);
+    this.carrito = this.carrito.filter((p) => p !== item);
     this.carritoService.actualizarCarrito(this.carrito);
     this.calcularTotal();
     console.log(`🗑 Producto eliminado: ${item.nombre}`);
@@ -106,7 +111,7 @@ ventasCliente: any[] = [];
     const cupon = this.cuponIngresado.trim().toLowerCase();
 
     if (cupon === 'descuento10') {
-      this.descuento = 0.10;
+      this.descuento = 0.1;
       console.log('✅ Cupón aplicado: 10%');
     } else {
       this.descuento = 0;
@@ -121,10 +126,12 @@ ventasCliente: any[] = [];
 
     if (!usuarioStr) {
       console.log('🔐 Usuario no autenticado. Redirigiendo a login...');
-      this.router.navigate(['/login'], { queryParams: { returnUrl: '/carrito' } });
+      this.router.navigate(['/login'], {
+        queryParams: { returnUrl: '/carrito' },
+      });
     } else {
       const usuario = JSON.parse(usuarioStr);
-      console.log("usuario encontrado", usuario)
+      console.log('usuario encontrado', usuario);
       console.log('✅ Usuario autenticado. Mostrando modal de facturación...');
       this.datosFactura.nombre = usuario?.nombre || '';
       this.datosFactura.correo = usuario?.email || '';
@@ -140,58 +147,56 @@ ventasCliente: any[] = [];
   }
 
   enviarFormulario(): void {
-  if (!this.datosFactura.correo || this.carrito.length === 0) {
-    console.warn('⚠️ Faltan datos o el carrito está vacío.');
-    return;
-  }
-
-  // Construir objeto detallesPago según el método seleccionado
-  const detallesPago = this.datosFactura.metodoPago === 'tarjeta'
-    ? {
-        tipo: 'tarjeta',
-        numero: this.datosFactura.tarjetaNumero,
-        nombre: this.datosFactura.tarjetaNombre,
-        expiracion: this.datosFactura.tarjetaExpiracion,
-        cvv: this.datosFactura.tarjetaCVV
-      }
-    : {
-        tipo: 'paypal',
-        correo: this.datosFactura.paypalCorreo
-      };
-
-  // Armar el pedido completo
- const pedido = {
-  correo_cliente: this.datosFactura.correo,
-  nombre_cliente: this.datosFactura.nombre,
-  direccion: this.datosFactura.direccion,
-  telefono: this.datosFactura.telefono,
-   metodoPago: this.datosFactura.metodoPago,
-    detallesPago,
-  productos: this.carrito.map(item => ({
-  producto_id: item.id,
-  nombre: item.nombre,
-  talla: item.talla,
-  precio_unitario: item.precio,
-  cantidad: item.cantidad
-}))
-};
-;
-
-  console.log('📤 Enviando pedido completo:', pedido);
-
-  // Llamar al servicio para registrar todas las ventas
-  this.ventaService.registrarVenta(pedido).subscribe({
-    next: res => {
-      console.log('✅ Pedido registrado con éxito:', res);
-      this.mostrarModalFacturacion = false;
-      this.vaciarCarrito();
-    },
-    error: err => {
-      console.error('❌ Error al registrar pedido:', err);
+    if (!this.datosFactura.correo || this.carrito.length === 0) {
+      console.warn('⚠️ Faltan datos o el carrito está vacío.');
+      return;
     }
-  });
-}
 
+    // Construir objeto detallesPago según el método seleccionado
+    const detallesPago =
+      this.datosFactura.metodoPago === 'tarjeta'
+        ? {
+            tipo: 'tarjeta',
+            numero: this.datosFactura.tarjetaNumero,
+            nombre: this.datosFactura.tarjetaNombre,
+            expiracion: this.datosFactura.tarjetaExpiracion,
+            cvv: this.datosFactura.tarjetaCVV,
+          }
+        : {
+            tipo: 'paypal',
+            correo: this.datosFactura.paypalCorreo,
+          };
+
+    // Armar el pedido completo
+    const pedido = {
+      correo_cliente: this.datosFactura.correo,
+      nombre_cliente: this.datosFactura.nombre,
+      direccion: this.datosFactura.direccion,
+      telefono: this.datosFactura.telefono,
+      metodoPago: this.datosFactura.metodoPago,
+      detallesPago,
+      productos: this.carrito.map((item) => ({
+        producto_id: item.id,
+        nombre: item.nombre,
+        talla: item.talla,
+        precio_unitario: item.precio,
+        cantidad: item.cantidad,
+      })),
+    };
+    console.log('📤 Enviando pedido completo:', pedido);
+
+    // Llamar al servicio para registrar todas las ventas
+    this.ventaService.registrarVenta(pedido).subscribe({
+      next: (res) => {
+        console.log('✅ Pedido registrado con éxito:', res);
+        this.mostrarModalFacturacion = false;
+        this.vaciarCarrito();
+      },
+      error: (err) => {
+        console.error('❌ Error al registrar pedido:', err);
+      },
+    });
+  }
 
   volver(): void {
     this.location.back();
@@ -199,34 +204,36 @@ ventasCliente: any[] = [];
   }
 
   abrirModalHistorialVentas() {
-  const correo = this.datosFactura.correo?.trim();
+    const correo = this.datosFactura.correo?.trim();
 
-  if (!correo) {
-    const correoIngresado = prompt('Por favor, ingresa tu correo electrónico para consultar tu historial de compras:');
-    if (!correoIngresado || !correoIngresado.includes('@')) {
-      alert('Correo inválido. Intenta nuevamente.');
-      return;
+    if (!correo) {
+      const correoIngresado = prompt(
+        'Por favor, ingresa tu correo electrónico para consultar tu historial de compras:'
+      );
+      if (!correoIngresado || !correoIngresado.includes('@')) {
+        alert('Correo inválido. Intenta nuevamente.');
+        return;
+      }
+      this.datosFactura.correo = correoIngresado;
     }
-    this.datosFactura.correo = correoIngresado;
+
+    this.ventaService
+      .obtenerVentasPorCorreo(this.datosFactura.correo)
+      .subscribe((res) => {
+        this.ventasCliente = res;
+        this.mostrarModalHistorial = true;
+      });
   }
 
-  this.ventaService.obtenerVentasPorCorreo(this.datosFactura.correo).subscribe(res => {
-    this.ventasCliente = res;
-    this.mostrarModalHistorial = true;
-  });
-}
+  calcularTotalVenta(venta: any): number {
+    if (!venta?.productos) return 0;
+    return venta.productos.reduce(
+      (total: number, p: any) => total + p.precio_unitario * p.cantidad,
+      0
+    );
+  }
 
-calcularTotalVenta(venta: any): number {
-  if (!venta?.productos) return 0;
-  return venta.productos.reduce(
-    (total: number, p: any) => total + p.precio_unitario * p.cantidad,
-    0
-  );
-}
-
-
-
-cerrarModalHistorial() {
-  this.mostrarModalHistorial = false;
-}
+  cerrarModalHistorial() {
+    this.mostrarModalHistorial = false;
+  }
 }

@@ -17,11 +17,13 @@ export class MetricasService {
    * 1. Total de productos por categoría (se agrupa en el frontend)
    */
   obtenerProductosPorCategoria(): Observable<any[]> {
-    return this.http.get<any[]>(`${this.baseUrl}/productos`, {
-      headers: this.headers,
-      params: new HttpParams().set('select', 'categoria_id')
-    });
-  }
+  return this.http.get<any[]>(`${this.baseUrl}/productos`, {
+    headers: this.headers,
+    params: new HttpParams()
+      .set('select', 'categoria_id,categorias(nombre)')
+  });
+}
+
 
   /**
    * 2. Total de productos vendidos, con nombre desde la tabla productos

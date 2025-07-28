@@ -1,0 +1,72 @@
+@use '../colores.scss' as *;
+@use '../tipografia.scss' as *;
+
+.contenedor-avatar {
+  width: 100%;
+  max-width: 400px;
+  margin: 2rem auto;
+  padding: 2rem;
+
+  border-radius: 20px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 2rem;
+  font-family: $fuente-principal;
+
+  h2 {
+    font-size: $titulo-mediano;
+    color: $color-primario;
+    font-weight: $font-bold;
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+  }
+
+  .avatar {
+    width: 100%;
+    max-width: 260px;
+    border: 2px solid $color-borde;
+    border-radius: 12px;
+    background-color: $color-fondo-principal;
+    overflow: hidden;
+    padding: 0.5rem;
+
+    img, svg {
+      width: 100%;
+      height: auto;
+      display: block;
+    }
+  }
+
+  .selector-colores {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 1rem;
+    justify-content: center;
+
+    button {
+      padding: 0.5rem 1.2rem;
+      font-size: $texto-base;
+      font-weight: $font-medium;
+      border: 2px solid $color-borde;
+      border-radius: 24px;
+      background-color: $color-primario;
+      color: $color-boton-texto;
+      cursor: pointer;
+      transition: all 0.3s ease;
+
+      &:hover {
+        background-color: $color-boton-hover;
+        transform: scale(1.05);
+        border-color: $color-acento;
+      }
+
+      &.activo {
+        background-color: $color-acento;
+        border-color: darken($color-acento, 10%);
+        box-shadow: 0 0 0 3px rgba($color-acento, 0.3);
+      }
+    }
+  }
+}

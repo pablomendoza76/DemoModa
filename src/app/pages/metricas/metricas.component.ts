@@ -8,7 +8,7 @@ import { Location } from '@angular/common';
   selector: 'app-metricas',
   templateUrl: './metricas.component.html',
   styleUrls: ['./metricas.component.scss'],
-  imports: [NgxChartsModule]
+  imports: [NgxChartsModule],
 })
 export class MetricasComponent implements OnInit {
   productosPorCategoria: any[] = [];
@@ -17,56 +17,73 @@ export class MetricasComponent implements OnInit {
 
   view: [number, number] = [600, 300];
 
-  constructor(private metricasService: MetricasService, private location: Location,) {}
+  constructor(
+    private metricasService: MetricasService,
+    private location: Location
+  ) {}
 
   ngOnInit(): void {
-    // 1. Productos por categoría
+    // 1. Agrupar productos por nombre de categoría
     this.metricasService.obtenerProductosPorCategoria().subscribe((res) => {
+      console.log('📥 [Productos por Categoría - Raw]', res);
+
       const agrupado: Record<string, number> = {};
-      res.forEach(p => {
-        const cat = p.categoria_id ?? 'Sin asignar';
-        agrupado[cat] = (agrupado[cat] || 0) + 1;
+      res.forEach((p) => {
+        const nombre = p.categorias?.nombre?.trim() || 'Sin categoría';
+        agrupado[nombre] = (agrupado[nombre] || 0) + 1;
       });
 
-      this.productosPorCategoria = Object.entries(agrupado).map(([categoria, count]) => ({
-        name: `Categoría ${categoria}`,
-        value: count
-      }));
+      this.productosPorCategoria = Object.entries(agrupado).map(
+        ([nombre, count]) => ({
+          name: nombre,
+          value: count,
+        })
+      );
 
-      console.log('[📊 productosPorCategoria]', this.productosPorCategoria);
+      console.log('📊 [Procesado] productosPorCategoria:', this.productosPorCategoria);
     });
 
-    // 2. Productos vendidos por nombre
+    // 2. Agrupar productos vendidos por nombre
     this.metricasService.obtenerCantidadVendidaPorProducto().subscribe((res) => {
+      console.log('📥 [Productos vendidos - Raw]', res);
+
       const vendidos: Record<string, number> = {};
-      res.forEach(r => {
-        const nombre = r.productos?.nombre || 'Desconocido';
+      res.forEach((r) => {
+        const nombre = r.productos?.nombre?.trim() || 'Desconocido';
         vendidos[nombre] = (vendidos[nombre] || 0) + Number(r.cantidad || 0);
       });
 
-      this.productosVendidos = Object.entries(vendidos).map(([nombre, total]) => ({
-        name: nombre,
-        value: total
-      }));
+      this.productosVendidos = Object.entries(vendidos).map(
+        ([nombre, total]) => ({
+          name: nombre,
+          value: total,
+        })
+      );
 
-      console.log('[📦 productosVendidos]', this.productosVendidos);
+      console.log('📦 [Procesado] productosVendidos:', this.productosVendidos);
     });
 
-    // 3. Top productos por ingresos
+    // 3. Agrupar ingresos por producto (cantidad * precio_unitario)
     this.metricasService.obtenerTopProductosPorIngreso().subscribe((res) => {
+      console.log('📥 [Top productos por ingresos - Raw]', res);
+
       const ingresos: Record<string, number> = {};
-      res.forEach(r => {
-        const nombre = r.productos?.nombre || 'Desconocido';
+
+      res.forEach((r) => {
+        const nombre = r.productos?.nombre?.trim() || 'Desconocido';
         const ingreso = (Number(r.precio_unitario) || 0) * (Number(r.cantidad) || 0);
         ingresos[nombre] = (ingresos[nombre] || 0) + ingreso;
       });
 
       this.topProductosIngresos = Object.entries(ingresos)
-        .map(([nombre, total]) => ({ name: nombre, value: total }))
+        .map(([nombre, total]) => ({
+          name: nombre,
+          value: Number(total.toFixed(2)),
+        }))
         .sort((a, b) => b.value - a.value)
         .slice(0, 5);
 
-      console.log('[💰 topProductosIngresos]', this.topProductosIngresos);
+      console.log('💰 [Procesado] topProductosIngresos:', this.topProductosIngresos);
     });
   }
 
@@ -74,4 +91,7 @@ export class MetricasComponent implements OnInit {
     this.location.back();
     console.log('⬅️ Regresando a la página anterior');
   }
+
+  formatearEtiqueta = (label: string): string =>
+    label.length > 20 ? label.slice(0, 20) + '…' : label;
 }

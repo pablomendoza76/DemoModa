@@ -1,36 +1,48 @@
 <div class="metricas-container">
-    <button class="boton-volver" (click)="volver()">← Volver</button>
+  <button class="boton-volver" (click)="volver()">← Volver</button>
 
-  <h2>Productos por Categoría</h2>
-  <ngx-charts-pie-chart
-    [results]="productosPorCategoria"
-    [view]="view"
-    [legend]="true"
-    [explodeSlices]="false"
-    [labels]="true"
-    [doughnut]="true"
-    [gradient]="false">
-  </ngx-charts-pie-chart>
+  <section class="grafico-seccion">
+    <h2>📊 Productos por Categoría</h2>
+    <ngx-charts-pie-chart
+      [results]="productosPorCategoria"
+      [view]="view"
+      [legend]="true"
+      [explodeSlices]="false"
+      [labels]="true"
+      [doughnut]="true"
+      [gradient]="false">
+    </ngx-charts-pie-chart>
+  </section>
 
-  <h2>Productos Vendidos (Unidades)</h2>
-  <ngx-charts-bar-vertical
-    [results]="productosVendidos"
-    [view]="view"
-    [legend]="false"
-    [showXAxisLabel]="true"
-    [showYAxisLabel]="true"
-    [xAxisLabel]="'Producto'"
-    [yAxisLabel]="'Unidades'">
-  </ngx-charts-bar-vertical>
+  <section class="grafico-seccion">
+    <h2>📦 Productos Vendidos (Unidades)</h2>
+    <ngx-charts-bar-vertical
+      [results]="productosVendidos"
+      [view]="view"
+      [legend]="false"
+      [showXAxisLabel]="true"
+      [showYAxisLabel]="true"
+      [xAxisLabel]="'Producto'"
+      [yAxisLabel]="'Unidades'"
+      [rotateXAxisTicks]="true"
+      [tooltipDisabled]="false"
+      [xAxisTickFormatting]="formatearEtiqueta">
+    </ngx-charts-bar-vertical>
+  </section>
 
-  <h2>Top 5 Productos por Ingresos</h2>
-  <ngx-charts-bar-vertical
-    [results]="topProductosIngresos"
-    [view]="view"
-    [legend]="false"
-    [showXAxisLabel]="true"
-    [showYAxisLabel]="true"
-    [xAxisLabel]="'Producto'"
-    [yAxisLabel]="'Ingresos $'">
-  </ngx-charts-bar-vertical>
+  <section class="grafico-seccion">
+    <h2>💰 Top 5 Productos por Ingresos</h2>
+    <ngx-charts-bar-vertical
+      [results]="topProductosIngresos"
+      [view]="view"
+      [legend]="false"
+      [showXAxisLabel]="true"
+      [showYAxisLabel]="true"
+      [xAxisLabel]="'Producto'"
+      [yAxisLabel]="'Ingresos ($)'"
+      [rotateXAxisTicks]="true"
+      [tooltipDisabled]="false"
+      [xAxisTickFormatting]="formatearEtiqueta">
+    </ngx-charts-bar-vertical>
+  </section>
 </div>
