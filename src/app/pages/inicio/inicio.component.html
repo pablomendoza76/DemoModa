@@ -1,6 +1,9 @@
 <div class="inicio-container" *ngIf="productoActual">
   <!-- 🧭 Barra de categorías -->
   <nav class="barra-categorias">
+     <div class="logo-navbar">
+    <img src="/img/fondo1.png" alt="Logo" />
+  </div>
     <ul class="lista-categorias">
       <li
         *ngFor="let categoria of categorias"
@@ -65,10 +68,6 @@
         <p class="coleccion-texto">Productos más vendidos</p>
         <h1 class="nombre-producto">{{ productoActual.nombre }}</h1>
         <p class="descripcion-producto">{{ productoActual.descripcion }}</p>
-      </div>
-
-      <div class="imagen-logo">
-        <img src="assets/logo-seduce.png" alt="Seduce Logo" />
       </div>
     </div>
 

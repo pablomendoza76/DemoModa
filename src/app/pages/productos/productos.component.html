@@ -1,4 +1,3 @@
-<!-- 🧭 Barra de categorías (copiada del inicio) -->
 <!-- 🧭 Barra de categorías -->
 <nav class="barra-categorias">
   <div class="logo-navbar">
@@ -22,6 +21,17 @@
       >
         <span class="carrito-texto">Carrito</span>
         <span class="carrito-icono">🛒</span>
+      </button>
+    </li>
+
+    <!-- 📊 Botón métricas (solo para Sofía) -->
+    <li class="categoria-item" *ngIf="esSofia">
+      <button
+        class="btn-carrito-contenedor boton-invertido"
+        (click)="irAMetricas()"
+        title="Ver métricas"
+      >
+        <span class="carrito-texto">Ver métricas</span>
       </button>
     </li>
 
@@ -81,5 +91,8 @@
   </div>
 
   <!-- 🧩 Tarjetas de productos -->
-  <app-tarjeta-producto [productos]="productosFiltrados"></app-tarjeta-producto>
+  <app-tarjeta-producto
+    [productos]="productosFiltrados"
+    [mostrarBotonEditar]="esSofia"
+  ></app-tarjeta-producto>
 </div>

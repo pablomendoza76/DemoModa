@@ -2,6 +2,7 @@ import { CommonModule } from '@angular/common';
 import { Component, Input } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { CarritoService } from '../../services/carrito.service';
+import { ArticuloService } from '../../services/articulo.service';
 
 @Component({
   selector: 'app-tarjeta-producto',
@@ -12,14 +13,23 @@ import { CarritoService } from '../../services/carrito.service';
 })
 export class TarjetaProductoComponent {
   @Input() productos: any[] = [];
+  @Input() mostrarBotonEditar: boolean = false;
 
   productoSeleccionado: any = null;
   tallaSeleccionada: string = '';
   cantidadSeleccionada: number = 1;
   mostrarModal: boolean = false;
 
-  constructor(private carritoService: CarritoService) {}
+  // Modal edición
+  mostrarModalEdicion: boolean = false;
+  productoEditando: any = null;
 
+  constructor(
+    private carritoService: CarritoService,
+    private ArticuloService: ArticuloService
+  ) {}
+
+  // 🛒 Abrir modal agregar al carrito
   abrirModal(producto: any): void {
     this.productoSeleccionado = producto;
     this.tallaSeleccionada = '';
@@ -46,7 +56,6 @@ export class TarjetaProductoComponent {
     };
 
     const carritoActual = this.carritoService.obtenerCarrito();
-
     const existente = carritoActual.find(item =>
       item.id === productoFinal.id && item.talla === productoFinal.talla
     );
@@ -61,5 +70,48 @@ export class TarjetaProductoComponent {
 
     this.carritoService.actualizarCarrito(carritoActual);
     this.cerrarModal();
+  }
+
+  // ✏️ Modal edición
+  abrirModalEdicion(producto: any): void {
+    this.productoEditando = { ...producto };
+    this.mostrarModalEdicion = true;
+    console.log('✏️ Modal edición abierto:', producto);
+  }
+
+  cerrarModalEdicion(): void {
+    this.mostrarModalEdicion = false;
+    this.productoEditando = null;
+    console.log('❌ Edición cancelada');
+  }
+
+  guardarCambiosProducto(): void {
+    if (!this.productoEditando.nombre || !this.productoEditando.precio) {
+      console.warn('⚠️ Nombre y precio son obligatorios');
+      return;
+    }
+
+    const { id, ...datos } = this.productoEditando;
+
+    // Aseguramos que los campos adicionales estén presentes
+    datos.talla = this.productoEditando.talla || '';
+    datos.color = this.productoEditando.color || '';
+    datos.tipo_genero = this.productoEditando.tipo_genero || '';
+    datos.categoria_id = this.productoEditando.categoria_id || null;
+    datos.imagen_url = this.productoEditando.imagen_url || '';
+
+    this.ArticuloService.actualizarArticulo(id, datos).subscribe({
+      next: (res) => {
+        console.log('✅ Producto actualizado con éxito:', res);
+
+        const index = this.productos.findIndex(p => p.id === id);
+        if (index !== -1) this.productos[index] = { id, ...datos };
+
+        this.cerrarModalEdicion();
+      },
+      error: (err) => {
+        console.error('❌ Error al actualizar producto:', err);
+      }
+    });
   }
 }

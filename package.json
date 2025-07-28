@@ -22,7 +22,11 @@
     "@angular/router": "^19.1.0",
     "@angular/ssr": "^19.1.8",
     "@supabase/supabase-js": "^2.52.1",
+    "@swimlane/ngx-charts": "^23.0.0-alpha.0",
+    "chart.js": "^4.5.0",
+    "d3": "^7.9.0",
     "express": "^4.18.2",
+    "ng2-charts": "^8.0.0",
     "rxjs": "~7.8.0",
     "tslib": "^2.3.0",
     "zone.js": "~0.15.0"

@@ -1,22 +1,25 @@
-
 @use '../../shared/colores.scss' as *;
 @use '../../shared/tipografia.scss' as *;
+
 .tarjetas-container {
   display: grid;
   grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
   gap: 2rem;
   padding: 2rem;
+  font-family: $fuente-principal;
 }
 
 .tarjeta {
+  position: relative;
   background-color: #fff;
   border-radius: 12px;
-  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.06);
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.05);
   padding: 1.5rem;
   text-align: center;
   display: flex;
   flex-direction: column;
   gap: 1rem;
+  overflow: hidden;
 
   img {
     width: 100%;
@@ -26,32 +29,60 @@
   }
 
   h2 {
-    font-size: 1.2rem;
-    font-weight: 600;
+    font-size: $titulo-pequeño;
+    font-weight: $font-bold;
     margin: 0;
+    color: #000;
   }
 
   .descripcion {
-    font-size: 0.9rem;
-    color: #666;
+    font-size: $texto-secundario;
+    color: #444;
+    font-weight: $font-regular;
   }
 
   .precio {
-    font-weight: bold;
-    color: $color-primario;
+    font-size: $texto-base;
+    font-weight: $font-bold;
+    color: #000;
   }
 
   button {
-    background-color: $color-primario;
+    background-color: #000;
     color: #fff;
     border: none;
     border-radius: 8px;
     padding: 0.6rem 1rem;
     cursor: pointer;
     transition: background-color 0.2s ease;
+    font-weight: $font-medium;
 
     &:hover {
-      background-color: darken($color-primario, 10%);
+      background-color: #111;
+    }
+  }
+
+  .editar-btn {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    background: #fff;
+    border: 1px solid #ccc;
+    border-radius: 50%;
+    box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
+    width: 36px;
+    height: 36px;
+    font-size: 18px;
+    cursor: pointer;
+    transition: background-color 0.2s ease, transform 0.2s ease;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    &:hover {
+      background-color: #f1f1f1;
+      transform: translate(-50%, -50%) scale(1.05);
     }
   }
 }
@@ -59,40 +90,152 @@
 .sin-productos {
   padding: 2rem;
   text-align: center;
-  font-weight: 500;
-  color: #777;
+  font-weight: $font-medium;
+  color: #555;
+  font-family: $fuente-principal;
 }
 
 .modal-carrito {
   position: fixed;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 100%;
+  inset: 0;
   background-color: rgba(0, 0, 0, 0.6);
   display: flex;
   justify-content: center;
   align-items: center;
+  z-index: 1000;
+  padding: 1rem;
+  font-family: $fuente-principal;
 
   .modal-contenido {
-    background: white;
+    background: #fff;
     padding: 2rem;
-    border-radius: 10px;
-    width: 90%;
-    max-width: 400px;
+    border-radius: 16px;
+    width: 100%;
+    max-width: 420px;
+    max-height: 85vh; // 👈 Limita la altura
+    overflow-y: auto; // 👈 Scroll interno
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
     display: flex;
     flex-direction: column;
-    gap: 1rem;
+    gap: 1.5rem;
+    color: #000;
+
+    h3 {
+      font-size: $titulo-mediano;
+      font-weight: $font-bold;
+      text-align: center;
+      margin: 0;
+      color: #000;
+    }
+
+    label {
+      font-size: $texto-secundario;
+      font-weight: $font-medium;
+      color: #000;
+      margin-bottom: 0.3rem;
+    }
+
+    input,
+    select,
+    textarea {
+      width: 90%;
+      padding: 0.75rem 1rem;
+      font-size: $texto-base;
+      border-radius: 12px;
+      border: 1px solid #ccc;
+      background: #fff;
+      color: #000;
+      transition: border 0.2s ease;
+
+      &:focus {
+        border-color: #000;
+        outline: none;
+      }
+    }
+
+    input[type="file"] {
+      padding: 0;
+      border: none;
+    }
+
+    .preview-img {
+      width: 100%;
+      max-height: 200px;
+      object-fit: contain;
+      border-radius: 10px;
+      border: 1px solid #ddd;
+    }
+
+    textarea {
+      resize: vertical;
+      min-height: 80px;
+    }
 
     .acciones {
       display: flex;
       justify-content: space-between;
+      gap: 1rem;
+
+      button {
+        flex: 1;
+        padding: 0.7rem 1rem;
+        font-size: $texto-base;
+        font-weight: $font-medium;
+        border-radius: 10px;
+        border: none;
+        cursor: pointer;
+        transition: background-color 0.2s ease;
+
+        &:first-child {
+          background-color: #fff;
+          border: 1px solid #ccc;
+          color: #000;
+
+          &:hover {
+            background-color: #f5f5f5;
+          }
+        }
+
+        &:last-child {
+          background-color: #000;
+          color: #fff;
+
+          &:hover {
+            background-color: #111;
+          }
+        }
+      }
+    }
+  }
+}
+
+@media (max-width: 480px) {
+  .tarjetas-container {
+    padding: 1rem;
+    gap: 1.2rem;
+  }
+
+  .tarjeta {
+    padding: 1rem;
+  }
+
+  .modal-carrito .modal-contenido {
+    padding: 1.5rem;
+    gap: 1.2rem;
+
+    h3 {
+      font-size: $titulo-pequeño;
     }
 
-    select, input {
-      width: 100%;
-      padding: 0.5rem;
-      margin-top: 0.5rem;
+    input,
+    select,
+    textarea {
+      font-size: $texto-secundario;
+      padding: 0.6rem 0.8rem;
+    }
+
+    .acciones button {
+      font-size: $texto-secundario;
     }
   }
 }

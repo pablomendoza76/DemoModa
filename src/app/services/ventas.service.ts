@@ -70,4 +70,38 @@ obtenerVentasPorCorreo(correo: string): Observable<any[]> {
   });
 }
 
+/**
+ * Obtener ventas agrupadas por mes
+ */
+obtenerVentasPorMes(): Observable<any[]> {
+  return this.http.post<any[]>(
+    `${environment.supabaseUrl}/rest/v1/rpc/ventas_por_mes`,
+    {},
+    { headers: this.headers }
+  );
+}
+
+/**
+ * Obtener el total de ventas
+ */
+obtenerTotalVentas(): Observable<number> {
+  return this.http.post<number>(
+    `${environment.supabaseUrl}/rest/v1/rpc/total_ventas`,
+    {},
+    { headers: this.headers }
+  );
+}
+
+/**
+ * Obtener ventas agrupadas por categoría
+ */
+obtenerVentasPorCategoria(): Observable<any[]> {
+  return this.http.post<any[]>(
+    `${environment.supabaseUrl}/rest/v1/rpc/ventas_por_categoria`,
+    {},
+    { headers: this.headers }
+  );
+}
+
+
 }

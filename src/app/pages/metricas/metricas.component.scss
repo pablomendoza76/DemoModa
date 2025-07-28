@@ -1,0 +1,66 @@
+@use '../../shared/colores.scss' as colores;
+@use '../../shared/tipografia.scss' as tipografia;
+
+.metricas-container {
+  background-color: colores.$color-fondo-principal;
+  color: colores.$color-texto;
+  padding: 2rem;
+  font-family: tipografia.$fuente-principal;
+  display: flex;
+  flex-direction: column;
+  gap: 2rem;
+  min-height: 100vh;
+
+  h2 {
+    font-size: tipografia.$titulo-mediano;
+    font-weight: tipografia.$font-bold;
+    margin-bottom: 1rem;
+    color: colores.$color-primario;
+    border-left: 4px solid colores.$color-acento;
+    padding-left: 1rem;
+  }
+
+  ngx-charts-pie-chart,
+  ngx-charts-bar-vertical {
+    padding: 1rem;
+    border-radius: 0.75rem;
+    border: 1px solid colores.$color-borde;
+    background-color: colores.$color-fondo-tarjeta;
+    box-shadow: 0 4px 12px colores.$color-sombra;
+  }
+
+  .boton-volver {
+    align-self: flex-start;
+    background-color: colores.$color-boton;
+    color: colores.$color-boton-texto;
+    font-size: tipografia.$texto-base;
+    font-weight: tipografia.$font-medium;
+    padding: 0.5rem 1.25rem;
+    border: none;
+    border-radius: 0.5rem;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+
+    &:hover {
+      background-color: colores.$color-boton-hover;
+    }
+  }
+
+  @media (max-width: 768px) {
+    padding: 1rem;
+
+    ngx-charts-pie-chart,
+    ngx-charts-bar-vertical {
+      padding: 0.5rem;
+    }
+
+    h2 {
+      font-size: tipografia.$titulo-pequeño;
+    }
+
+    .boton-volver {
+      font-size: tipografia.$texto-secundario;
+      padding: 0.4rem 1rem;
+    }
+  }
+}

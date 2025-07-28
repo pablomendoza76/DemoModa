@@ -1,6 +1,11 @@
 <div class="tarjetas-container" *ngIf="productos.length > 0">
   <div class="tarjeta" *ngFor="let producto of productos">
     <img [src]="producto.imagen_url" alt="{{ producto.nombre }}" />
+
+    <!-- Ícono botón editar (solo si mostrarBotonEditar es true) -->
+<button *ngIf="mostrarBotonEditar" class="editar-btn" (click)="abrirModalEdicion(producto)" title="Editar producto">✏️</button>
+
+
     <h2>{{ producto.nombre }}</h2>
     <p class="descripcion">{{ producto.descripcion }}</p>
     <p class="precio">{{ producto.precio | currency }}</p>
@@ -35,3 +40,51 @@
     </div>
   </div>
 </div>
+
+<!-- ✏️ Modal edición de producto -->
+<!-- ✏️ Modal edición de producto -->
+<div class="modal-carrito" *ngIf="mostrarModalEdicion">
+  <div class="modal-contenido">
+    <h3>Editar producto</h3>
+
+    <label>Nombre:</label>
+    <input type="text" [(ngModel)]="productoEditando.nombre" />
+
+    <label>Descripción:</label>
+    <textarea [(ngModel)]="productoEditando.descripcion"></textarea>
+
+    <label>Precio:</label>
+    <input type="number" min="0" [(ngModel)]="productoEditando.precio" />
+
+    <label>Talla (ej: S, M, L):</label>
+    <input type="text" [(ngModel)]="productoEditando.talla" />
+
+    <label>Color:</label>
+    <input type="text" [(ngModel)]="productoEditando.color" />
+
+    <label>Tipo de género:</label>
+    <select [(ngModel)]="productoEditando.tipo_genero">
+      <option value="hombre">Hombre</option>
+      <option value="mujer">Mujer</option>
+      <option value="unisex">Unisex</option>
+    </select>
+
+    <label>Categoría ID:</label>
+    <input type="number" [(ngModel)]="productoEditando.categoria_id" min="1" />
+
+    <label>URL de imagen:</label>
+    <input type="text" [(ngModel)]="productoEditando.imagen_url" />
+    <img
+      *ngIf="productoEditando.imagen_url"
+      [src]="productoEditando.imagen_url"
+      alt="Vista previa"
+      class="preview-img"
+    />
+
+    <div class="acciones">
+      <button (click)="cerrarModalEdicion()">Cancelar</button>
+      <button (click)="guardarCambiosProducto()">Guardar</button>
+    </div>
+  </div>
+</div>
+
