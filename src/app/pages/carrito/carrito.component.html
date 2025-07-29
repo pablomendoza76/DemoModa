@@ -1,6 +1,6 @@
-<div class="carrito-grid">
+<div class="carrito-grid" *ngIf="carrito.length > 0; else vacio">
   <!-- 🧾 Lista de productos -->
-  <div class="carrito-items" *ngIf="carrito.length > 0; else vacio">
+  <div class="carrito-items">
     <h2 class="carrito-titulo">🛍️ Mi carrito ({{ carrito.length }})</h2>
 
     <div class="item-carrito" *ngFor="let item of carrito">
@@ -19,7 +19,7 @@
         </div>
 
         <div class="cantidad">
-          <label for="cantidad-{{ item.id }}">Cantidad</label>
+          <label for="cantidad-{{ item.id }}">Cantidad </label>
           <div class="cantidad-controles" id="cantidad-{{ item.id }}">
             <button (click)="restarCantidad(item)">−</button>
             <span class="cantidad-numero">{{ item.cantidad }}</span>
@@ -34,20 +34,12 @@
     </div>
   </div>
 
-  <!-- 🛒 Carrito vacío -->
-  <ng-template #vacio>
-    <div class="carrito-vacio">
-      <p>🛒 Tu carrito está vacío</p>
-    </div>
-  </ng-template>
-
-  <!-- 🧍 Avatar renderizado justo debajo -->
+   <!-- 🧍 Avatar renderizado justo debajo -->
 <div class="contenedor-avatar">
   <app-avatar></app-avatar>
 </div>
 
-
-  <!-- 📦 Resumen: SIEMPRE visible -->
+  <!-- 📦 Resumen -->
   <div class="resumen-pedido">
     <h3>Resumen</h3>
 
@@ -55,6 +47,7 @@
       <span>Subtotal:</span>
       <span>{{ total | currency }}</span>
     </div>
+    
 
     <div class="linea" *ngIf="descuento > 0">
       <span>Descuento:</span>
@@ -82,16 +75,186 @@
       <button class="btn aplicar" (click)="aplicarCupon()">Aplicar</button>
     </div>
 
-    <button class="btn comprar" [disabled]="carrito.length === 0" (click)="abrirModalPedido()">
+    <button class="btn comprar" (click)="abrirModalPedido()">
       🛒 Realizar pedido
     </button>
-    <button class="btn vaciar" [disabled]="carrito.length === 0" (click)="vaciarCarrito()">
+    <button class="btn vaciar" (click)="vaciarCarrito()">
       🗑 Vaciar carrito
     </button>
     <button class="btn historial" (click)="abrirModalHistorialVentas()">
       📋 Ver mis compras anteriores
     </button>
+
     <button class="btn volver" (click)="volver()">← Volver a productos</button>
   </div>
 </div>
 
+<!-- 🛒 Carrito vacío -->
+<ng-template #vacio>
+  <div class="carrito-vacio">
+    <p>🛒 Tu carrito está vacío</p>
+    <button class="btn volver" (click)="volver()">← Volver a productos</button>
+  </div>
+</ng-template>
+
+<!-- 📋 MODAL DE FACTURACIÓN -->
+<div class="modal-overlay" *ngIf="mostrarModalFacturacion">
+  <div class="modal-content">
+    <div class="modal-header">
+      <h2>Formulario de Facturación</h2>
+      <button class="cerrar" (click)="cerrarModalFacturacion()">×</button>
+    </div>
+
+    <form
+      (ngSubmit)="enviarFormulario()"
+      #formFactura="ngForm"
+      class="formulario-facturacion"
+    >
+      <label>Nombre completo:</label>
+      <input
+        type="text"
+        name="nombre"
+        [(ngModel)]="datosFactura.nombre"
+        required
+      />
+
+      <label>Correo electrónico:</label>
+      <input
+        type="email"
+        name="correo"
+        [(ngModel)]="datosFactura.correo"
+        required
+      />
+
+      <label>Dirección:</label>
+      <textarea
+        name="direccion"
+        [(ngModel)]="datosFactura.direccion"
+        required
+      ></textarea>
+
+      <label>Teléfono:</label>
+      <input
+        type="tel"
+        name="telefono"
+        [(ngModel)]="datosFactura.telefono"
+        required
+      />
+
+      <label>Método de pago:</label>
+      <select name="metodoPago" [(ngModel)]="datosFactura.metodoPago" required>
+        <option value="" disabled selected>Seleccione una opción</option>
+        <option value="tarjeta">Tarjeta</option>
+        <option value="paypal">PayPal</option>
+      </select>
+
+      <!-- TARJETA -->
+      <div *ngIf="datosFactura.metodoPago === 'tarjeta'">
+        <label>Número de tarjeta:</label>
+        <input
+          type="text"
+          name="tarjetaNumero"
+          [(ngModel)]="datosFactura.tarjetaNumero"
+          required
+        />
+
+        <label>Nombre en la tarjeta:</label>
+        <input
+          type="text"
+          name="tarjetaNombre"
+          [(ngModel)]="datosFactura.tarjetaNombre"
+          required
+        />
+
+        <label>Expiración:</label>
+        <input
+          type="text"
+          name="tarjetaExpiracion"
+          placeholder="MM/AA"
+          [(ngModel)]="datosFactura.tarjetaExpiracion"
+          required
+        />
+
+        <label>CVV:</label>
+        <input
+          type="text"
+          name="tarjetaCVV"
+          [(ngModel)]="datosFactura.tarjetaCVV"
+          required
+        />
+      </div>
+
+      <!-- PAYPAL -->
+      <div *ngIf="datosFactura.metodoPago === 'paypal'">
+        <label>Correo de PayPal:</label>
+        <input
+          type="email"
+          name="paypalCorreo"
+          [(ngModel)]="datosFactura.paypalCorreo"
+          required
+        />
+      </div>
+
+      <p class="total-pagar">
+        Total a pagar: <strong>{{ totalConDescuento | currency }}</strong>
+      </p>
+
+      <div class="resumen-carrito-modal">
+        <h2>Productos seleccionados</h2>
+        <ul>
+          <li *ngFor="let item of carrito">
+            {{ item.nombre }} × {{ item.cantidad }} -
+            {{ item.precio * item.cantidad | currency }}
+          </li>
+        </ul>
+      </div>
+
+      <button type="submit" class="btn confirmar">Confirmar pedido</button>
+    </form>
+  </div>
+</div>
+
+<!-- 📜 Modal de historial de compras -->
+<div class="modal-overlay" *ngIf="mostrarModalHistorial">
+  <div class="modal-content">
+    <div class="modal-header">
+      <h2>Historial de Compras</h2>
+      <button class="cerrar" (click)="cerrarModalHistorial()">×</button>
+    </div>
+
+    <div *ngIf="ventasCliente.length > 0; else sinVentas">
+      <div *ngFor="let venta of ventasCliente" class="venta-card">
+        <p><strong>🕓 Fecha:</strong> {{ venta.fecha | date : "short" }}</p>
+        <p><strong>📍 Dirección:</strong> {{ venta.direccion }}</p>
+        <p><strong>💳 Método de pago:</strong> {{ venta.metodo_pago }}</p>
+        <p *ngIf="venta.detalles_pago?.correo">
+          <strong>✉️ Correo de pago:</strong> {{ venta.detalles_pago.correo }}
+        </p>
+
+        <div *ngIf="venta.productos?.length">
+          <h4>🛒 Productos:</h4>
+          <ul>
+            <li *ngFor="let prod of venta.productos">
+              {{ prod.nombre }} × {{ prod.cantidad }} -
+              {{ prod.precio_unitario | currency }}
+            </li>
+          </ul>
+          <p style="margin-top: 0.5rem">
+            <strong>Total pagado:</strong>
+            {{ calcularTotalVenta(venta) | currency }}
+          </p>
+        </div>
+
+        <hr />
+      </div>
+    </div>
+
+    <ng-template #sinVentas>
+      <p>No se encontraron ventas para este correo.</p>
+    </ng-template>
+
+    <ng-template #sinVentas>
+      <p>No tienes compras registradas aún.</p>
+    </ng-template>
+  </div>
+</div>

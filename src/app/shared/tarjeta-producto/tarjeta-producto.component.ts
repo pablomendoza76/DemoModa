@@ -14,13 +14,14 @@ import { ArticuloService } from '../../services/articulo.service';
 export class TarjetaProductoComponent {
   @Input() productos: any[] = [];
   @Input() mostrarBotonEditar: boolean = false;
+  @Input() categorias: any[] = [];
 
   productoSeleccionado: any = null;
   tallaSeleccionada: string = '';
   cantidadSeleccionada: number = 1;
   mostrarModal: boolean = false;
 
-  // Modal edición
+  // ✏️ Edición
   mostrarModalEdicion: boolean = false;
   productoEditando: any = null;
 
@@ -93,7 +94,7 @@ export class TarjetaProductoComponent {
 
     const { id, ...datos } = this.productoEditando;
 
-    // Aseguramos que los campos adicionales estén presentes
+    // Validar campos y limpiar nulos
     datos.talla = this.productoEditando.talla || '';
     datos.color = this.productoEditando.color || '';
     datos.tipo_genero = this.productoEditando.tipo_genero || '';
@@ -111,6 +112,25 @@ export class TarjetaProductoComponent {
       },
       error: (err) => {
         console.error('❌ Error al actualizar producto:', err);
+      }
+    });
+  }
+
+  // 🗑 Eliminar producto
+  eliminarProducto(producto: any): void {
+    const confirmar = confirm(`¿Estás seguro de eliminar "${producto.nombre}"?`);
+
+    if (!confirmar) return;
+
+    this.ArticuloService.eliminarArticulo(producto.id).subscribe({
+      next: () => {
+        this.productos = this.productos.filter(p => p.id !== producto.id);
+        this.cerrarModalEdicion();
+        console.log('🗑 Producto eliminado correctamente');
+      },
+      error: (err) => {
+        console.error('❌ Error al eliminar producto:', err);
+        alert('No se pudo eliminar el producto.');
       }
     });
   }

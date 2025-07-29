@@ -2,13 +2,20 @@
   <div class="tarjeta" *ngFor="let producto of productos">
     <img [src]="producto.imagen_url" alt="{{ producto.nombre }}" />
 
-    <!-- Ícono botón editar (solo si mostrarBotonEditar es true) -->
-<button *ngIf="mostrarBotonEditar" class="editar-btn" (click)="abrirModalEdicion(producto)" title="Editar producto">✏️</button>
+    <!-- 🛠️ Botones de edición solo si es Sofía -->
+    <ng-container *ngIf="mostrarBotonEditar">
+      <!-- ✏️ Botón editar -->
+      <button class="editar-btn" (click)="abrirModalEdicion(producto)" title="Editar producto">✏️</button>
 
+      <!-- 🗑️ Botón eliminar -->
+      <button class="eliminar-btn" (click)="eliminarProducto(producto)" title="Eliminar producto">🗑</button>
+    </ng-container>
 
     <h2>{{ producto.nombre }}</h2>
     <p class="descripcion">{{ producto.descripcion }}</p>
     <p class="precio">{{ producto.precio | currency }}</p>
+
+    <!-- 🛒 Botón agregar al carrito -->
     <button (click)="abrirModal(producto)">Agregar Carrito</button>
   </div>
 </div>
@@ -17,7 +24,7 @@
   No hay productos disponibles.
 </div>
 
-<!-- 🛒 Modal selección talla y cantidad -->
+<!-- 🛒 Modal agregar al carrito -->
 <div class="modal-carrito" *ngIf="mostrarModal">
   <div class="modal-contenido">
     <h3>Agregar al carrito</h3>
@@ -42,7 +49,6 @@
 </div>
 
 <!-- ✏️ Modal edición de producto -->
-<!-- ✏️ Modal edición de producto -->
 <div class="modal-carrito" *ngIf="mostrarModalEdicion">
   <div class="modal-contenido">
     <h3>Editar producto</h3>
@@ -56,7 +62,7 @@
     <label>Precio:</label>
     <input type="number" min="0" [(ngModel)]="productoEditando.precio" />
 
-    <label>Talla (ej: S, M, L):</label>
+    <label>Talla:</label>
     <input type="text" [(ngModel)]="productoEditando.talla" />
 
     <label>Color:</label>
@@ -69,8 +75,6 @@
       <option value="unisex">Unisex</option>
     </select>
 
-    <label>Categoría ID:</label>
-    <input type="number" [(ngModel)]="productoEditando.categoria_id" min="1" />
 
     <label>URL de imagen:</label>
     <input type="text" [(ngModel)]="productoEditando.imagen_url" />
@@ -87,4 +91,3 @@
     </div>
   </div>
 </div>
-

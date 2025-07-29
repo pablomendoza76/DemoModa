@@ -111,7 +111,7 @@
     padding: 2rem;
     border-radius: 16px;
     width: 100%;
-    max-width: 420px;
+    max-width: 600px;
     max-height: 85vh; // 👈 Limita la altura
     overflow-y: auto; // 👈 Scroll interno
     box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
@@ -239,3 +239,29 @@
     }
   }
 }
+
+.eliminar-btn {
+  position: absolute;
+  top: 50%;
+  left: 65%; // 👉 ligeramente a la derecha del botón editar
+  transform: translate(-50%, -50%);
+  background: #ffeaea;
+  border: 1px solid #e74c3c;
+  border-radius: 50%;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
+  width: 36px;
+  height: 36px;
+  font-size: 18px;
+  color: #e74c3c;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: background-color 0.2s ease, transform 0.2s ease;
+
+  &:hover {
+    background-color: #fddede;
+    transform: translate(-50%, -50%) scale(1.05);
+  }
+}
+
