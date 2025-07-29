@@ -1,43 +1,52 @@
-<div class="carrito-grid" *ngIf="carrito.length > 0; else vacio">
+<div class="carrito-grid">
   <!-- 🧾 Lista de productos -->
   <div class="carrito-items">
     <h2 class="carrito-titulo">🛍️ Mi carrito ({{ carrito.length }})</h2>
 
-    <div class="item-carrito" *ngFor="let item of carrito">
-      <div class="item-imagen">
-        <img [src]="item.imagen_url" [alt]="item.nombre" />
-      </div>
-
-      <div class="item-info">
-        <div class="nombre-precio">
-          <h3 class="nombre">{{ item.nombre }}</h3>
-          <p class="precio">{{ item.precio | currency }}</p>
+    <ng-container *ngIf="carrito.length > 0; else carritoVacio">
+      <div class="item-carrito" *ngFor="let item of carrito">
+        <div class="item-imagen">
+          <img [src]="item.imagen_url" [alt]="item.nombre" />
         </div>
 
-        <div class="variantes">
-          <span class="talla">Talla: {{ item.talla }}</span>
-        </div>
+        <div class="item-info">
+          <div class="nombre-precio">
+            <h3 class="nombre">{{ item.nombre }}</h3>
+            <p class="precio">{{ item.precio | currency }}</p>
+          </div>
 
-        <div class="cantidad">
-          <label for="cantidad-{{ item.id }}">Cantidad </label>
-          <div class="cantidad-controles" id="cantidad-{{ item.id }}">
-            <button (click)="restarCantidad(item)">−</button>
-            <span class="cantidad-numero">{{ item.cantidad }}</span>
-            <button (click)="sumarCantidad(item)">+</button>
+          <div class="variantes">
+            <span class="talla">Talla: {{ item.talla }}</span>
+          </div>
+
+          <div class="cantidad">
+            <label for="cantidad-{{ item.id }}">Cantidad </label>
+            <div class="cantidad-controles" id="cantidad-{{ item.id }}">
+              <button (click)="restarCantidad(item)">−</button>
+              <span class="cantidad-numero">{{ item.cantidad }}</span>
+              <button (click)="sumarCantidad(item)">+</button>
+            </div>
           </div>
         </div>
-      </div>
 
-      <div class="item-eliminar">
-        <button (click)="removerItem(item)">×</button>
+        <div class="item-eliminar">
+          <button (click)="removerItem(item)">×</button>
+        </div>
       </div>
-    </div>
+    </ng-container>
+
+    <ng-template #carritoVacio>
+      <div class="tarjeta-vacia">
+        <h3>🛒 Tu carrito está vacío</h3>
+        <p>Agrega productos para comenzar tu compra.</p>
+      </div>
+    </ng-template>
   </div>
 
-   <!-- 🧍 Avatar renderizado justo debajo -->
-<div class="contenedor-avatar">
-  <app-avatar></app-avatar>
-</div>
+  <!-- 🧍 Avatar renderizado justo debajo -->
+  <div class="contenedor-avatar">
+    <app-avatar></app-avatar>
+  </div>
 
   <!-- 📦 Resumen -->
   <div class="resumen-pedido">
@@ -47,7 +56,6 @@
       <span>Subtotal:</span>
       <span>{{ total | currency }}</span>
     </div>
-    
 
     <div class="linea" *ngIf="descuento > 0">
       <span>Descuento:</span>
@@ -89,13 +97,8 @@
   </div>
 </div>
 
-<!-- 🛒 Carrito vacío -->
-<ng-template #vacio>
-  <div class="carrito-vacio">
-    <p>🛒 Tu carrito está vacío</p>
-    <button class="btn volver" (click)="volver()">← Volver a productos</button>
-  </div>
-</ng-template>
+
+
 
 <!-- 📋 MODAL DE FACTURACIÓN -->
 <div class="modal-overlay" *ngIf="mostrarModalFacturacion">
